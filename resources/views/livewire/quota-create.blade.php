@@ -53,14 +53,46 @@
 
                             <div class="mt-6 flex items-center justify-end gap-x-6">
                                 <a href="{{ route('quota') }}" type="button" class="rounded-md text-sm font-semibold px-3 py-2 text-gray-900 hover:bg-indigo-500 hover:text-white">Cancel</a>
-                                <button type="button" 
-                                        wire:click="confirmCreate" 
-                                        wire:loading.attr="disabled" 
-                                        class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                                Save</button>
+                                <button type="button"
+                                    wire:click="confirmCreate"
+                                    wire:loading.attr="disabled"
+                                    class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                                    Save</button>
                             </div>
                         </form>
                         @if($loading)
+                        <div wire:poll.300ms="checkProgress"
+                            class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+
+                            <div class="bg-white p-6 rounded-2xl w-96 text-center">
+
+                                @if($status === 'processing')
+                                <h2 class="text-lg font-semibold mb-4">
+                                    Generating Fees...
+                                </h2>
+
+                                <div class="w-full bg-gray-200 rounded-full h-4">
+                                    <div class="bg-indigo-600 h-4 rounded-full transition-all duration-300"
+                                        style="width: {{ $progress }}%">
+                                    </div>
+                                </div>
+
+                                <p class="mt-2 text-sm text-gray-600">
+                                    {{ $progress }}%
+                                </p>
+                                @endif
+
+                                @if($status === 'success')
+                                <div class="text-green-600 text-4xl mb-2">✔</div>
+                                <h2 class="text-lg font-semibold">
+                                    Quota generated successfully
+                                </h2>
+                                @endif
+
+                            </div>
+                        </div>
+                        @endif
+                        <!-- @if($loading)
                             <div 
                                 wire:poll.1000ms="checkProgress"
                                 class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
@@ -81,7 +113,7 @@
                                     </p>
                                 </div>
                             </div>
-                        @endif
+                        @endif -->
                     </div>
                 </div>
             </div>
@@ -106,19 +138,26 @@
         // }
         Livewire.on('show-confirm', () => {
             Swal.fire({
-                title: "You're sure?", 
-                text: "This action will create the quota for the current month.", 
+                title: "You're sure?",
+                text: "This action will create the quota for the current month.",
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: '#d33',
                 cancelButtonColor: '#3085d6',
                 confirmButtonText: 'Yes, create it!',
-                cancelButtonText: 'Cancel' 
+                cancelButtonText: 'Cancel'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    Livewire.dispatch('execute-save'); 
+                    Livewire.dispatch('execute-save');
                 }
             })
+        })
+
+        Livewire.on('quota-finished', () => {
+            setTimeout(() => {
+                @this.loading = false
+                @this.status = 'processing'
+            }, 1000)
         })
 
         Livewire.on('execute-save', () => {

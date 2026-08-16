@@ -5,18 +5,18 @@ namespace App\Livewire;
 use Livewire\Component;
 use App\Models\Quota;
 use App\Models\Client;
-use App\Jobs\GenerateQuotaPayments; 
-use App\Jobs\GenerateQuota; 
-use Carbon\Carbon; 
+use App\Jobs\GenerateQuotaPayments;
+use Carbon\Carbon;
 
 class QuotaCreate extends Component
 {
     protected $paginationTheme = 'tailwind';
 
-    public $months_year; 
-    public $loading = false; 
-    public $progress = 0; 
-    public $quotaId; 
+    public $months_year;
+    public $loading = false;
+    public $progress = 0;
+    public $quotaId;
+    public $status  = 'processing';
 
     protected $listeners = ['execute-save' => 'save'];
 
@@ -65,7 +65,7 @@ class QuotaCreate extends Component
         // Activamos loading UI
         $this->loading = true;
 
-        // Cacheamos progreso inicial 
+        // Cacheamos progreso inicial
         #cache()->put("quota_progress_{$quota->id}", 0, now()->addMinutes(30));
 
         // Despachamos Job
@@ -79,9 +79,14 @@ class QuotaCreate extends Component
     {
         $this->progress = cache()->get("quota_progress_{$this->quotaId}", 0);
 
-        if ($this->progress >= 100) {
-            $this->loading = false;
-            session()->flash('success', 'Fee issued successfully.');
+        // if ($this->progress >= 100) {
+        //     $this->loading = false;
+        //     session()->flash('success', 'Fee issued successfully.');
+        // }
+        if ($this->progress >= 100 && $this->status !== 'success') {
+            $this->status = 'success'; 
+            // $this->loading = false; 
+            $this->dispatch('quota-finished'); 
         }
     }
 

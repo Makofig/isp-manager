@@ -20,16 +20,16 @@
                     <div class="flex flex-wrap py-10 px-2">
                         <img
                             class="h-32 w-32 rounded-full object-cover"
-                            src="{{ $payment->cliente->imagen
-                                        ? asset('storage/clients/' . $payment->cliente->imagen)
+                            src="{{ $payment->clients->imagen
+                                        ? asset('storage/clients/' . $payment->clients->imagen)
                                         : asset('images/default-avatar.png') }}"
-                            alt="{{ $payment->cliente->nombre }} {{ $payment->cliente->apellido }}">
+                            alt="{{ $payment->clients->nombre }} {{ $payment->clients->apellido }}">
                         <div class="flex flex-col justify-center ml-4">
-                            <h3 class="text-lg font-semibold text-gray-800">{{ $payment->cliente->nombre }} {{ $payment->cliente->apellido }}</h3>
-                            <p class="text-gray-500">{{ $payment->cliente->email }}</p>
-                            <p class="text-gray-500">Phone: {{ $payment->cliente->telefono }}</p>
-                            <p class="text-gray-500">{{ $payment->cliente->ip }}</p>
-                            <p class="text-gray-500">{{ $payment->cliente->direccion }}</p>
+                            <h3 class="text-lg font-semibold text-gray-800">{{ $payment->clients->nombre }} {{ $payment->clients->apellido }}</h3>
+                            <p class="text-gray-500">{{ $payment->clients->email }}</p>
+                            <p class="text-gray-500">Phone: {{ $payment->clients->telefono }}</p>
+                            <p class="text-gray-500">{{ $payment->clients->ip }}</p>
+                            <p class="text-gray-500">{{ $payment->clients->direccion }}</p>
 
                         </div>
                     </div>
