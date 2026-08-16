@@ -177,6 +177,27 @@
             <x-responsive-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+            <x-responsive-nav-link href="{{ route('clients') }}" :active="request()->routeIs('clients')">
+                {{ __('Clients') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link href="{{ route('contracts') }}" :active="request()->routeIs('contracts')">
+                {{ __('Contracts') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link href="{{ route('access-point') }}" :active="request()->routeIs('access-point')">
+                {{ __('Access Point') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link href="{{ route('quota') }}" :active="request()->routeIs('quota')">
+                {{ __('Quota') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link href="{{ route('debtors') }}" :active="request()->routeIs('debtors')">
+                {{ __('Debtors') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link href="{{ route('clients.banned') }}" :active="request()->routeIs('clients.banned')">
+                {{ __('Banned') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link href="{{ route('statistics') }}" :active="request()->routeIs('statistics')">
+                {{ __('Statistics') }}
+            </x-responsive-nav-link>
         </div>
 
         <!-- Responsive Settings Options -->

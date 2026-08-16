@@ -29,7 +29,7 @@ class MercadoPagoService
         $this->initialized = true;
     }
 
-    public function crearLinkPago(): array
+    public function crearLinkPago(array $data): array
     {
         $this->init();
 
@@ -39,31 +39,27 @@ class MercadoPagoService
             $preference = $client->create([
                 "auto_return" => "approved",
                 "back_urls" => [
-                    "success" => "https://www.httpbin.org/get?back_url=success",
-                    "failure" => "https://www.httpbin.org/get?back_url=failure",
-                    "pending" => "https://www.httpbin.org/get?back_url=pending"
+                    "success" => route('mp.success'),
+                    "failure" => route('mp.failure'),
+                    "pending" => route('mp.pending')
                 ],
-                "statement_descriptor" => "TestStore",
-                "binary_mode" => false,
-                "external_reference" => "IWD1238971",
+                "statement_descriptor" => config('app.name', 'InterSys'),
+                "binary_mode" => true,
+                "external_reference" => $data['external_reference'] ?? null,
                 "items" => [
                     [
-                        "id" => "010983098",
-                        "title" => "My Product",
+                        "id" => $data['item_id'] ?? '001',
+                        "title" => $data['title'] ?? 'Internet Service',
                         "quantity" => 1,
-                        "unit_price" => 1000,
-                        "description" => "Description of my product",
-                        "category_id" => "retail",
+                        "unit_price" => (float) ($data['price'] ?? 0),
+                        "description" => $data['description'] ?? 'Internet Service Payment',
+                        "category_id" => "services",
                     ]
                 ],
                 "payer" => [
-                    "email" => "test_user_12398378192@testuser.com",
+                    "email" => $data['payer_email'] ?? 'test@test.com',
                 ],
-                "payment_methods" => [
-                    "installments" => 12,
-                    "default_payment_method_id" => "account_money",
-                ],
-                "notification_url" => "https://www.your-site.com/webhook",
+                "notification_url" => route('mp.webhook'),
             ]);
 
             return [
@@ -77,14 +73,10 @@ class MercadoPagoService
                 'status' => $e->getApiResponse()->getStatusCode(),
                 'content' => $e->getApiResponse()->getContent(),
             ]);
-
-            throw new \Exception('Error MercadoPago API');
+            throw new \Exception('Error MercadoPago API: ' . $e->getMessage());
         } catch (\Throwable $e) {
-            Log::error('MercadoPago error', [
-                'message' => $e->getMessage(),
-            ]);
-
-            throw new \Exception('Error al crear link de pago');
+            Log::error('MercadoPago error', ['message' => $e->getMessage()]);
+            throw new \Exception('Error al crear link de pago: ' . $e->getMessage());
         }
     }
 

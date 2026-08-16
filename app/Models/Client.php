@@ -3,29 +3,33 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Client extends Model
 {
-    // Nombre de la tabla 
-    protected $table = 'cliente'; 
+    use SoftDeletes;
 
-    // Clave primaria solo si no es id 
-    // protected $primaryKey = 'id_cliente';
-
-    // si no se usa timestamps (created_at / updated_at)
-    // public $timestamps = false;
+    // Nombre de la tabla
+    protected $table = 'cliente';
 
     protected $fillable = [
-        'id_plan', 
-        'id_point', 
+        'id_plan',
+        'id_point',
         'nombre',
         'apellido',
+        'email',
         'direccion',
         'telefono',
         'ip',
         'imagen',
         'is_banned'
-    ]; 
+    ];
+
+    protected $casts = [
+        'is_banned' => 'boolean',
+    ];
+
+    protected $dates = ['deleted_at']; 
 
     // Relación con el modelo de contratos uno a uno. 
     public function contract()

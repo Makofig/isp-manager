@@ -123,7 +123,7 @@
                                                 <select id="contracts_id" name="contracts_id" autocomplete="contracts_id-name" class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
                                                     <option>Select a contract</option>
                                                     @foreach ($contracts as $contract)
-                                                        <option value="{{ $contract->id }} {{ old('contracts_id') == $contract->id ? 'selected' : '' }}">{{ $contract->megabytes }}</option>
+                                                        <option value="{{ $contract->id }}" {{ old('contracts_id') == $contract->id ? 'selected' : '' }}>{{ $contract->megabytes }} - {{ $contract->nombre }} (${{ number_format($contract->costo, 2) }})</option>
                                                     @endforeach
                                                 </select>
                                                 @error('contracts_id')
@@ -141,7 +141,7 @@
                                                 <select id="access_point_id" name="access_point_id" autocomplete="access_point_id-name" class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
                                                     <option>Select a point</option>
                                                     @foreach ($points as $point)
-                                                        <option value="{{ $point->id }} {{ old('access_point_id') == $point->id ? 'selected' : ''}}">{{ $point->ssid }}</option>
+                                                        <option value="{{ $point->id }}" {{ old('access_point_id') == $point->id ? 'selected' : '' }}>{{ $point->ssid }}</option>
                                                     @endforeach
                                                 </select>
                                                 @error('access_point_id')

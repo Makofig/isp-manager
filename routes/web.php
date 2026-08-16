@@ -3,9 +3,9 @@
 use Illuminate\Support\Facades\Route;
 
 // Import controladores 
-use App\Http\Controllers\ClientController; 
+use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ContractController;
-use App\Http\Controllers\AccesspointController;
+use App\Http\Controllers\AccessPointController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\QuotaController;
 
@@ -107,7 +107,7 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('/access-point', [AccesspointController::class, 'index'])->name('access-point');
+    Route::get('/access-point', [AccessPointController::class, 'index'])->name('access-point');
 });
 
 Route::middleware([
@@ -115,7 +115,7 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::post('/access-point/store', [AccesspointController::class, 'store'])->name('access-point.store');
+    Route::post('/access-point/store', [AccessPointController::class, 'store'])->name('access-point.store');
 });
 
 Route::middleware([
@@ -123,7 +123,7 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('/access-point/create', [AccesspointController::class, 'create'])->name('access-point.create');
+    Route::get('/access-point/create', [AccessPointController::class, 'create'])->name('access-point.create');
 });
 
 Route::middleware([
@@ -131,7 +131,7 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('/access-point/show/{id}', [AccesspointController::class, 'show'])->name('access-point.show');
+    Route::get('/access-point/show/{id}', [AccessPointController::class, 'show'])->name('access-point.show');
 });
 
 Route::middleware([
@@ -139,7 +139,7 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('/access-point/edit/{id}', [AccesspointController::class, 'edit'])->name('access-point.edit');
+    Route::get('/access-point/edit/{id}', [AccessPointController::class, 'edit'])->name('access-point.edit');
 });
 
 Route::middleware([
@@ -147,7 +147,7 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::put('/access-point/update/{id}', [AccesspointController::class, 'update'])->name('access-point.update');
+    Route::put('/access-point/update/{id}', [AccessPointController::class, 'update'])->name('access-point.update');
 });
 
 Route::middleware([
@@ -155,7 +155,7 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::delete('/access-point/destroy/{id}', [AccesspointController::class, 'destroy'])->name('access-point.destroy');
+    Route::delete('/access-point/destroy/{id}', [AccessPointController::class, 'destroy'])->name('access-point.destroy');
 });
 
 // Ruta de los planes 

@@ -109,8 +109,8 @@ class PaymentController extends Controller
         // 👉 instanciación LAZY (clave)
         $mpService = app(MercadoPagoService::class);
 
-        $clientes = Client::where('activo', true)
-            ->with('plan')
+        $clientes = Client::where('is_banned', false)
+            ->with('contract')
             ->get();
 
         $response = [];
@@ -118,7 +118,7 @@ class PaymentController extends Controller
         foreach ($clientes as $cliente) {
 
             // 🛑 Idempotencia
-            $yaExiste = Payments::where('cliente_id', $cliente->id)
+            $yaExiste = Payments::where('id_cliente', $cliente->id)
                 ->whereMonth('created_at', now()->month)
                 ->whereYear('created_at', now()->year)
                 ->exists();
@@ -134,18 +134,19 @@ class PaymentController extends Controller
 
             // 2️⃣ Pago
             $pago = Payments::create([
-                'cliente_id' => $cliente->id,
-                'cuota_id' => $cuota->id,
+                'id_cliente' => $cliente->id,
+                'id_cuota' => $cuota->id,
                 'num_cuotas' => 1,
-                'costo' => $cliente->plan->costo,
+                'costo' => $cliente->contract->costo,
                 'estado' => false
             ]);
 
             // 3️⃣ Link MercadoPago
             $linkPago = $mpService->crearLinkPago([
-                'title' => "Internet {$mes} - {$cliente->plan->nombre}",
-                'price' => $cliente->plan->costo,
-                'external_reference' => $pago->id
+                'title' => "Internet {$mes} - {$cliente->contract->nombre}",
+                'price' => $cliente->contract->costo,
+                'external_reference' => (string) $pago->id,
+                'description' => "Monthly payment for {$cliente->nombre} {$cliente->apellido}",
             ]);
 
             // 4️⃣ Guardar link
