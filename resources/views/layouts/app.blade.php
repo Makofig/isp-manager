@@ -103,6 +103,11 @@
     <body class="font-sans antialiased">
         <x-banner />
 
+        <!-- Notifications Bell (top-right) -->
+        <div class="fixed top-4 right-4 z-40">
+            <livewire:notifications-bell />
+        </div>
+
         <div class="min-h-screen bg-gray-100">
             @livewire('navigation-menu')
 

@@ -15,7 +15,6 @@ services:
       - laravel
     command: >
       sh -c "
-      php artisan key:generate --force &&
       php artisan config:clear &&
       php artisan cache:clear &&
       php artisan db:seed --force &&

@@ -10,22 +10,20 @@ use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 use App\Models\Quota;
 
-class QuotaGeneratedMail extends Mailable
+class QuotaGeneratedMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
-    public $quota;
-    public $status;
-    public $errorMessage;
+    public Quota $quota;
+    public int $clientCount;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(Quota $quota = null, string $status = 'success', string $errorMessage = null)
+    public function __construct(Quota $quota, int $clientCount)
     {
         $this->quota = $quota;
-        $this->status = $status;
-        $this->errorMessage = $errorMessage;
+        $this->clientCount = $clientCount;
     }
 
     /**
@@ -33,12 +31,8 @@ class QuotaGeneratedMail extends Mailable
      */
     public function envelope(): Envelope
     {
-        $subject = $this->status === 'success'
-            ? "✅ Nueva cuota generada - {$this->quota?->created_at->format('Y-m-d')}"
-            : "⚠️ Error al generar cuota";
-
         return new Envelope(
-            subject: $subject,
+            subject: "Cuota generada - {$this->quota->created_at->format('F Y')}",
         );
     }
 
@@ -51,8 +45,7 @@ class QuotaGeneratedMail extends Mailable
             view: 'emails.quota-generated',
             with: [
                 'quota' => $this->quota,
-                'status' => $this->status,
-                'errorMessage' => $this->errorMessage,
+                'clientCount' => $this->clientCount,
             ]
         );
     }

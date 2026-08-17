@@ -4,8 +4,8 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use App\Models\Quota;
-use App\Models\Client;
 use App\Jobs\GenerateQuotaPayments;
+use App\Services\QuotaGenerationService;
 use Carbon\Carbon;
 
 class QuotaCreate extends Component
@@ -45,33 +45,22 @@ class QuotaCreate extends Component
         [$monthName, $year] = explode(' ', $this->months_year);
         $month = Carbon::createFromFormat('F', $monthName)->month;
 
-        $existingQuota = Quota::whereYear('created_at', $year)
-            ->whereMonth('created_at', $month)
-            ->first();
+        // Delegate to centralized service
+        $result = app(QuotaGenerationService::class)->handle((int) $year, $month);
 
-        if ($existingQuota) {
-            $this->addError('months_year', 'This month\'s fee already exists.');
+        if (! $result['created']) {
+            $this->addError('months_year', $result['message']);
             return;
         }
 
-        $quota = Quota::create([
-            'numero' => Carbon::now()->month,
-        ]);
+        $this->quotaId = $result['quota']->id;
 
-        $this->quotaId = $quota->id;
+        $this->resetErrorBag();
 
-        $this->resetErrorBag(); // 🔥 limpia errores viejos
-
-        // Activamos loading UI
+        // Activate loading UI for progress polling
         $this->loading = true;
 
-        // Cacheamos progreso inicial
-        #cache()->put("quota_progress_{$quota->id}", 0, now()->addMinutes(30));
-
-        // Despachamos Job
-        GenerateQuotaPayments::dispatch($quota->id);
-
-        // Empezamos polling
+        // Start polling for job progress
         $this->dispatch('startPolling');
     }
 

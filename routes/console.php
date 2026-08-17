@@ -12,5 +12,5 @@ Artisan::command('quotas:generate', function () {
     $this->call('app:generate-monthly-quotas');
 })->describe('Generate monthly quotas for clients');
 
-// Agregar scheduler
-Schedule::command('quotas:generate')->monthlyOn(1, '00:05');
+// Scheduler: run on 1st of each month at 00:05
+Schedule::command('app:generate-monthly-quotas')->monthlyOn(1, '00:05');

@@ -8,6 +8,7 @@ use App\Http\Controllers\contractController;
 use App\Http\Controllers\access_pointController;
 use App\Http\Controllers\paymentController;
 use App\Http\Controllers\quotaController;
+use App\Http\Controllers\NotificationController;
 use App\Livewire\QuotaCreate;
 
 Route::get('/', function () {
@@ -108,4 +109,15 @@ Route::middleware([
     Route::get('/statistics', function () {
         return view('statistics');
     })->name('statistics');
+});
+
+// Rutas de notificaciones
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified',
+])->prefix('notifications')->group(function () {
+    Route::get('/', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/read-all', [NotificationController::class, 'markAllRead'])->name('notifications.read-all');
+    Route::post('/{notification}/read', [NotificationController::class, 'markRead'])->name('notifications.read');
 });
