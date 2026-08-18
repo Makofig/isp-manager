@@ -1,6 +1,5 @@
 FROM php:8.3-fpm
 
-# Dependencias del sistema 
 RUN apt-get update && apt-get install -y \
     git \
     curl \
@@ -18,27 +17,36 @@ RUN apt-get update && apt-get install -y \
     pcntl \
     bcmath \
     gd \
-    zip
+    zip \
+    && rm -rf /var/lib/apt/lists/*
 
-# Composer 
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer 
+# OPcache
+RUN docker-php-ext-enable opcache
 
-# Directorio de trabajo 
+COPY docker/php/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
+
+# Composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
 WORKDIR /var/www
 
-# Copiamos el codigo 
+# Dependencias primero para aprovechar Docker cache
+COPY composer.json composer.lock ./
+
+RUN composer install \
+    --no-dev \
+    --no-interaction \
+    --no-progress \
+    --prefer-dist \
+    --optimize-autoloader
+
+# Código
 COPY . .
 
-# Permisos 
-#RUN chown -R www-data:www-data /var/www \
-#    && chmod -R 755 storage bootstrap/cache
+# Permisos
+RUN chown -R www-data:www-data storage bootstrap/cache \
+    && chmod -R 775 storage bootstrap/cache
 
-RUN chown -R www-data:www-data storage bootstrap/cache
-RUN chmod -R 775 storage bootstrap/cache
+USER www-data
 
-# Instalamos las dependencias de PHP 
-RUN composer install --no-dev --optimize-autoloader
-
-USER www-data 
-
-CMD ["php-fpm"] 
+CMD ["php-fpm", "-F"]

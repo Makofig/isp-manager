@@ -73,7 +73,7 @@
 
     /* Input dark */
     .input-dark {
-        @apply h-[42px] bg-dark-elevated border border-dark-border rounded-[7px]
+        @apply h-[42px] px-3.5 bg-dark-elevated border border-dark-border rounded-[7px]
                text-text-primary placeholder:text-muted
                focus:outline-none focus:border-accent
                disabled:opacity-50 disabled:cursor-not-allowed;

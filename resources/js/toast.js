@@ -68,13 +68,8 @@ window.confirmAction = function (title, message, callback) {
     alpineData.formId = '';
     alpineData.open = true;
 
-    // Override confirm to call the callback instead of form submit
-    alpineData.confirm = function () {
-        this.loading = true;
-        this.open = false;
-        this.loading = false;
-        if (callback) callback();
-    };
+    // Store the callback and use a flag to indicate callback mode
+    window._confirmCallback = callback;
 };
 
 function submitForm(action, formId) {

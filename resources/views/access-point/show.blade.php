@@ -1,50 +1,53 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Access Point Show') }}
-        </h2>
-    </x-slot>
-    <!-- @if (session('success'))
-    <script>
-        Swal.fire({
-            icon: 'success',
-            title: '¡Exito!',
-            text: `{{ session('success') }}`,
-            timer: 2000,
-            showConfirmButton: false
-        })
-    </script>
-    @endif -->
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="container max-w-6xl">
-                <div class="bg-white rounded-xl shadow-md overflow-hidden">
-                    <!-- Table Header -->
-                    <div class="p-6 border-b border-gray-200">
-                        <div class="flex flex-col md:flex-row md:items-center md:justify-between">
-                            <div>
-                                <h2 class="text-xl font-bold text-gray-800">Access Point Details</h2>
-                                <p class="text-gray-500 mt-1">View and manage access point information here.</p>
-                            </div>
-                            <x-button-previous></x-button-previous>
-                        </div>
-                    </div>
-                    <div class="flex flex-wrap py-10 px-2">
-                        
-                        <div class="flex flex-col justify-center ml-4">
-                            <h3 class="text-lg font-semibold text-gray-800">{{ $access_point->ssid }}</h3>
-                            <p class="text-gray-500">Frecuencia: {{ $access_point->frecuencia }}</p>
-                            <p class="text-gray-500">IP: {{ $access_point->ip_ap }}</p>
-                            <p class="text-gray-500">Clientes: {{ $access_point->clients->count() }}</p>
-                            <p class="text-gray-500">Localidad: {{ $access_point->localidad }}</p>
+    <x-page-header
+        title="Access Point"
+        description="{{ $access_point->ssid }}"
+    />
 
-                        </div>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- AP Info Card -->
+        <div class="lg:col-span-1">
+            <div class="stat-card">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-12 h-12 rounded-[10px] bg-accent/10 flex items-center justify-center">
+                        <x-icon name="wifi" class="w-6 h-6 text-accent" />
                     </div>
                     <div>
-                       @livewire('access-clients-table', ['access_point_id' => $access_point->id])
+                        <h3 class="text-base font-semibold text-text-primary">{{ $access_point->ssid }}</h3>
+                        <p class="text-xs text-muted">{{ $access_point->frecuencia }}</p>
                     </div>
                 </div>
+
+                <div class="space-y-3 pt-4 border-t border-dark-border">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs text-muted uppercase tracking-wider">IP Address</span>
+                        <span class="text-sm text-text-secondary font-mono">{{ $access_point->ip_ap }}</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs text-muted uppercase tracking-wider">Location</span>
+                        <span class="text-sm text-text-secondary">{{ $access_point->localidad }}</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs text-muted uppercase tracking-wider">Connected Clients</span>
+                        <x-ui-badge variant="info">{{ $access_point->clients->count() }}</x-ui-badge>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs text-muted uppercase tracking-wider">Status</span>
+                        <x-ui-badge variant="online">ONLINE</x-ui-badge>
+                    </div>
+                </div>
+
+                <div class="mt-4 flex items-center gap-2">
+                    <a href="{{ route('access-point.edit', $access_point->id) }}" class="btn-secondary text-xs flex-1">Edit</a>
+                    <a href="{{ route('access-point') }}" class="btn-ghost text-xs flex-1">Back</a>
+                </div>
             </div>
+        </div>
+
+        <!-- Connected Clients Table -->
+        <div class="lg:col-span-2">
+            <x-page-header title="Connected Clients" description="Clients connected to this access point" />
+            @livewire('access-clients-table', ['access_point_id' => $access_point->id])
         </div>
     </div>
 </x-app-layout>

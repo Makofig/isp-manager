@@ -1,72 +1,105 @@
 services:
+
   app:
     build:
       context: .
       dockerfile: docker/php/Dockerfile
+
     container_name: laravel_app
+
     restart: unless-stopped
+
     working_dir: /var/www
+
     depends_on:
       mysql:
-        condition: service_started
-    volumes:
-      - .:/var/www
+        condition: service_healthy
+
     networks:
       - laravel
-    command: >
-      sh -c "
-      php artisan migrate --force &&
-      php artisan config:clear &&
-      php artisan cache:clear &&
-      php artisan db:seed --force &&
-      php-fpm
-      "
+
   queue:
-    build: 
+    build:
       context: .
       dockerfile: docker/php/Dockerfile
+
     container_name: laravel_queue
-    restart: unless-stopped 
+
+    restart: unless-stopped
+
     working_dir: /var/www
+
     depends_on:
       mysql:
-        condition: service_started
-    volumes:
-      - .:/var/www
+        condition: service_healthy
+
     networks:
       - laravel
-    command: php artisan queue:work --sleep=3 --tries=3 --timeout=120
+
+    command:
+      - php
+      - artisan
+      - queue:work
+      - --sleep=3
+      - --tries=3
+      - --timeout=120
 
   nginx:
     image: nginx:stable-alpine
+
     container_name: laravel_nginx
+
     restart: unless-stopped
+
     ports:
       - "5005:80"
+
     volumes:
-      - .:/var/www
-      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+
     depends_on:
       - app
+
     networks:
       - laravel
 
   mysql:
     image: mysql:8.0
+
     container_name: laravel_mysql
+
     restart: unless-stopped
+
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
       MYSQL_DATABASE: intersys
       MYSQL_USER: admin
       MYSQL_PASSWORD: admin123456
+
     volumes:
       - mysql_data:/var/lib/mysql
-      #./db.sql:/docker-entrypoint-initdb.d/db.sql
+      - ./docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf:ro
+
     ports:
       - "3309:3306"
+
     networks:
       - laravel
+
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "-h",
+          "localhost",
+          "-uadmin",
+          "-padmin123456"
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
 volumes:
   mysql_data:

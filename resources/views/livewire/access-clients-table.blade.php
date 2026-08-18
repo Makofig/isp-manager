@@ -1,72 +1,46 @@
 <div>
-    {{-- The Master doesn't talk, he acts. --}}
-     <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
+    <div class="relative overflow-x-auto rounded-[8px] border border-dark-border">
+        <table class="min-w-full">
+            <thead class="bg-dark-elevated">
                 <tr>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Name
-                    </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        IP Address
-                    </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Contracts
-                    </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Updated
-                    </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Created
-                    </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Status
-                    </th>
+                    <th scope="col" class="px-4 py-3 text-left text-[11px] font-medium text-muted uppercase tracking-wider">Name</th>
+                    <th scope="col" class="px-4 py-3 text-left text-[11px] font-medium text-muted uppercase tracking-wider">IP Address</th>
+                    <th scope="col" class="px-4 py-3 text-left text-[11px] font-medium text-muted uppercase tracking-wider">Contract</th>
+                    <th scope="col" class="px-4 py-3 text-left text-[11px] font-medium text-muted uppercase tracking-wider">Status</th>
                 </tr>
             </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
-                @foreach ($clients as $client)
-                <!-- Row 1 -->
-                <tr class="hover:bg-gray-50 transition-colors duration-150">
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="flex items-center">
-                            <div class="h-10 w-10 flex-shrink-0">
-                                <img
-                                    class="h-10 w-10 rounded-full object-cover"
-                                    src="{{ $client->imagen 
-                                        ? asset('storage/clients/' . $client->imagen) 
-                                        : asset('images/default-avatar.png') }}"
-                                    alt="{{ $client->nombre }} {{ $client->apellido }}">
-                            </div>
-                            <div class="ml-4">
-                                <div class="text-sm font-medium text-gray-900">{{ $client->nombre}} - {{ $client->apellido }}</div>
-                                <div class="text-sm text-gray-500">{{ $client->direccion }}</div>
-                            </div>
-                        </div>
+            <tbody class="divide-y divide-dark-border">
+                @forelse ($clients as $client)
+                <tr class="hover:bg-dark-elevated/50 transition-colors duration-150">
+                    <td class="px-4 py-3.5">
+                        <div class="text-sm text-text-primary">{{ $client->nombre }} {{ $client->apellido }}</div>
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm text-gray-900">{{ $client->ip }}</div>
+                    <td class="px-4 py-3.5">
+                        <span class="text-sm text-text-secondary font-mono">{{ $client->ip }}</span>
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm text-gray-900">{{ $client->contract->megabytes }}</div>
+                    <td class="px-4 py-3.5">
+                        <span class="text-sm text-text-secondary">{{ $client->contract->megabytes ?? '—' }} MB</span>
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="px-2 text-xs inline-flex rounded-full bg-green-100 text-green-800">{{ $client->updated_at ? $client->updated_at : 'Sin actualizar' }}</div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800 ">{{ $client->created_at }}</div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                            Active
-                        </span>
+                    <td class="px-4 py-3.5">
+                        @if ($client->is_banned)
+                            <x-ui-badge variant="banned">BANNED</x-ui-badge>
+                        @else
+                            <x-ui-badge variant="active">ACTIVE</x-ui-badge>
+                        @endif
                     </td>
                 </tr>
-                @endforeach
+                @empty
+                <tr>
+                    <td colspan="4" class="px-4 py-12">
+                        <x-ui-empty-state title="No clients connected" description="This access point has no clients connected." icon="wifi" />
+                    </td>
+                </tr>
+                @endforelse
             </tbody>
         </table>
     </div>
     <!-- Pagination -->
-
-    <x-pagination :paginator="$clients" />
+    <div class="mt-4">
+        <x-pagination :paginator="$clients" />
+    </div>
 </div>
