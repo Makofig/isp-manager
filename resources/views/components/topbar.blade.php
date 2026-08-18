@@ -15,15 +15,8 @@ $unreadCount = auth()->check() ? auth()->user()->unreadNotifications()->count() 
             <x-icon name="menu" class="w-5 h-5" />
         </button>
 
-        <!-- Search -->
-        <div class="relative w-full max-w-md hidden sm:block">
-            <x-icon name="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted" />
-            <input
-                type="search"
-                placeholder="Search clients, contracts, IPs..."
-                class="input-dark w-full pl-10 pr-4 text-sm"
-            >
-        </div>
+        <!-- Search (disabled for now) -->
+        <div class="relative w-full max-w-md hidden"></div>
     </div>
 
     <!-- Right: Notifications + User -->
