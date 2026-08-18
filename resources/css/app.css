@@ -2,6 +2,113 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================
+   InterSys — Design System Base
+   ============================================ */
+
+@layer base {
+    :root {
+        /* Dark Palette */
+        --bg-primary: #0B0F14;
+        --bg-surface: #11161D;
+        --bg-surface-elevated: #171D25;
+        --border: #252D36;
+        --text-primary: #E6EDF3;
+        --text-secondary: #8B949E;
+        --text-muted: #5D6670;
+        --accent: #58A6FF;
+        --accent-hover: #79B8FF;
+        --success: #3FB950;
+        --warning: #D29922;
+        --danger: #F85149;
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        background-color: var(--bg-primary);
+        color: var(--text-primary);
+        font-family: 'JetBrains Mono', monospace;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Global transition for interactive elements */
+    a, button, input, select, textarea {
+        transition: background-color 150ms ease,
+                    border-color 150ms ease,
+                    color 150ms ease,
+                    opacity 150ms ease;
+    }
+
+    /* Custom scrollbar (dark) */
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+        background: var(--bg-primary);
+    }
+    ::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--text-muted);
+    }
+}
+
+@layer components {
+    /* Card style */
+    .card-dark {
+        @apply bg-dark-surface border border-dark-border rounded-[10px];
+    }
+
+    /* Stat card */
+    .stat-card {
+        @apply card-dark p-5;
+    }
+
+    /* Input dark */
+    .input-dark {
+        @apply h-[42px] bg-dark-elevated border border-dark-border rounded-[7px]
+               text-text-primary placeholder:text-muted
+               focus:outline-none focus:border-accent
+               disabled:opacity-50 disabled:cursor-not-allowed;
+    }
+
+    /* Button variants */
+    .btn-primary {
+        @apply h-[42px] px-4 inline-flex items-center justify-center bg-accent text-dark-bg font-medium rounded-[7px]
+               hover:bg-accent-hover
+               focus:outline-none focus:ring-2 focus:ring-accent/50
+               disabled:opacity-50 disabled:cursor-not-allowed;
+    }
+
+    .btn-secondary {
+        @apply h-[42px] px-4 inline-flex items-center justify-center bg-dark-elevated border border-dark-border text-text-primary rounded-[7px]
+               hover:bg-dark-surface
+               focus:outline-none focus:ring-2 focus:ring-dark-border
+               disabled:opacity-50 disabled:cursor-not-allowed;
+    }
+
+    .btn-danger {
+        @apply h-[42px] px-4 inline-flex items-center justify-center bg-danger text-white font-medium rounded-[7px]
+               hover:opacity-90
+               focus:outline-none focus:ring-2 focus:ring-danger/50
+               disabled:opacity-50 disabled:cursor-not-allowed;
+    }
+
+    .btn-ghost {
+        @apply h-[42px] px-4 inline-flex items-center justify-center bg-transparent text-text-secondary rounded-[7px]
+               hover:bg-dark-elevated hover:text-text-primary
+               focus:outline-none focus:ring-2 focus:ring-dark-border
+               disabled:opacity-50 disabled:cursor-not-allowed;
+    }
+}
+
 [x-cloak] {
     display: none;
 }

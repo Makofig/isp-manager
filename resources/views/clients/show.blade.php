@@ -6,13 +6,7 @@
     </x-slot>
     @if (session('success'))
     <script>
-        Swal.fire({
-            icon: 'success',
-            title: '¡Exito!',
-            text: `{{ session('success') }}`,
-            timer: 2000,
-            showConfirmButton: false
-        })
+        window.toast.success(`{{ session('success') }}`);
     </script>
     @endif
     <div class="py-12">

@@ -2,10 +2,14 @@
 
 namespace App\Notifications;
 
+use App\Mail\ClientSuspendedMail;
+use App\Models\Client;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Mail\Mailable;
 
-class ClientSuspended extends Notification
+class ClientSuspended extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -23,7 +27,18 @@ class ClientSuspended extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['database'];
+        return ['database', 'mail'];
+    }
+
+    /**
+     * Get the mail representation of the notification.
+     */
+    public function toMail(object $notifiable): Mailable
+    {
+        $client = Client::find($this->clientId);
+
+        return (new ClientSuspendedMail($client, $this->reason))
+            ->to($notifiable->email);
     }
 
     /**

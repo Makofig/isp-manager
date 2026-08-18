@@ -18,7 +18,45 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                sans: ['JetBrains Mono', 'monospace', ...defaultTheme.fontFamily.sans],
+                mono: ['JetBrains Mono', 'monospace'],
+            },
+            colors: {
+                // InterSys Dark Palette
+                dark: {
+                    DEFAULT: '#0B0F14',
+                    bg: '#0B0F14',
+                    surface: '#11161D',
+                    elevated: '#171D25',
+                    border: '#252D36',
+                },
+                accent: {
+                    DEFAULT: '#58A6FF',
+                    hover: '#79B8FF',
+                },
+                muted: {
+                    DEFAULT: '#5D6670',
+                    light: '#8B949E',
+                },
+                // Text colors
+                'text-primary': '#E6EDF3',
+                'text-secondary': '#8B949E',
+                // Status colors
+                success: '#3FB950',
+                warning: '#D29922',
+                danger: '#F85149',
+            },
+            ringColor: {
+                'dark-border': '#252D36',
+                'accent': '#58A6FF',
+                'danger': '#F85149',
+                'warning': '#D29922',
+            },
+            transitionDuration: {
+                '150': '150ms',
+            },
+            maxWidth: {
+                '8xl': '1600px',
             },
         },
     },

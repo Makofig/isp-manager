@@ -30,7 +30,47 @@ class User extends Authenticatable
         'lastname',
         'email',
         'password',
+        'role',
     ];
+
+    /**
+     * Role constants.
+     */
+    public const ROLE_ADMIN = 'admin';
+    public const ROLE_OPERATOR = 'operator';
+    public const ROLE_AUDITOR = 'auditor';
+
+    /**
+     * Check if the user has a specific role.
+     */
+    public function hasRole(string $role): bool
+    {
+        return $this->role === $role;
+    }
+
+    /**
+     * Check if the user is an admin.
+     */
+    public function isAdmin(): bool
+    {
+        return $this->role === self::ROLE_ADMIN;
+    }
+
+    /**
+     * Check if the user is an operator.
+     */
+    public function isOperator(): bool
+    {
+        return $this->role === self::ROLE_OPERATOR;
+    }
+
+    /**
+     * Check if the user is an auditor.
+     */
+    public function isAuditor(): bool
+    {
+        return $this->role === self::ROLE_AUDITOR;
+    }
 
     /**
      * The attributes that should be hidden for serialization.

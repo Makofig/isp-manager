@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Models\Payments;
 
 class paymentController extends Controller
 {
+    use AuthorizesRequests;
     /**
      * Display a listing of the resource.
      */
@@ -36,10 +38,9 @@ class paymentController extends Controller
      */
     public function show(string $id)
     {
-        // mostrar detalles del pago
         $payment = Payments::findOrFail($id);
+        $this->authorize('view', $payment);
 
-        //return view('payments.show', ['payment' => $payment]);
         return view('payments.show', compact('payment'));
     }
 
@@ -48,10 +49,9 @@ class paymentController extends Controller
      */
     public function edit(string $id)
     {
-        // editar los detalles del pago
         $payment = Payments::findOrFail($id);
+        $this->authorize('update', $payment);
 
-        //return view('payments.edit', ['payment' => $payment]);
         return view('payments.edit', compact('payment'));
     }
 
@@ -60,6 +60,9 @@ class paymentController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $payment = Payments::findOrFail($id);
+        $this->authorize('update', $payment);
+
         // Validar los datos 
         $validated = $request->validate([
             'amount' => 'required|numeric|min:0',
@@ -68,10 +71,7 @@ class paymentController extends Controller
             'voucher' => 'nullable|file|mimes:jpg,png,pdf|max:2048',
         ]); 
 
-        // Encontrar el pago
-        $payment = Payments::findOrFail($id);
-
-       // Armamos el array de actualización
+        // Armamos el array de actualización
         $data = [
             'abonado'    => $validated['amount'],
             'estado'     => '1',

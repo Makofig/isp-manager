@@ -2,10 +2,14 @@
 
 namespace App\Notifications;
 
+use App\Mail\PaymentOverdueMail;
+use App\Models\Payments;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Mail\Mailable;
 
-class PaymentOverdue extends Notification
+class PaymentOverdue extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -24,7 +28,18 @@ class PaymentOverdue extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['database'];
+        return ['database', 'mail'];
+    }
+
+    /**
+     * Get the mail representation of the notification.
+     */
+    public function toMail(object $notifiable): Mailable
+    {
+        $payment = Payments::with('clients')->find($this->paymentId);
+
+        return (new PaymentOverdueMail($payment, $this->daysOverdue))
+            ->to($notifiable->email);
     }
 
     /**

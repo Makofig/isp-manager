@@ -2,18 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Contracts; 
+use App\Models\Contracts;
 use Illuminate\Http\Request;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Models\Client;
 
 class contractController extends Controller
 {
+    use AuthorizesRequests;
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        // obtener todos los contratos 
+        $this->authorize('viewAny', Contracts::class);
+
         $contracts = Contracts::paginate(10); 
 
         return view('contracts.index', compact('contracts'));
@@ -24,7 +27,8 @@ class contractController extends Controller
      */
     public function create()
     {
-        // Retornar la vista para crear el contrato
+        $this->authorize('create', Contracts::class);
+
         return view('contracts.create');
     }
 
@@ -33,6 +37,8 @@ class contractController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', Contracts::class);
+
         // Recibimos los datos del contrato para guardarlos 
         $validated= $request->validate([
             'name' => 'required|string|max:255',
@@ -66,8 +72,9 @@ class contractController extends Controller
      */
     public function edit(string $id)
     {
-        // Obtener el contrato por su ID
         $contract = Contracts::findOrFail($id);
+        $this->authorize('update', $contract);
+
         return view('contracts.edit', compact('contract'));
     }
 
@@ -76,7 +83,10 @@ class contractController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        // Recibimos los datos del contrato para guardarlos 
+        $contract = Contracts::findOrFail($id);
+        $this->authorize('update', $contract);
+
+        // Recibimos los datos para actualizar el contrato
         $validated= $request->validate([
             'name' => 'required|string|max:255',
             'megabytes' => 'required|integer|min:1',
@@ -101,8 +111,10 @@ class contractController extends Controller
      */
     public function destroy(string $id)
     {
-        // Eliminar un contrato seleccionado
         $contract = Contracts::findOrFail($id);
+        $this->authorize('delete', $contract);
+
+        // Eliminar un contrato seleccionado
 
         // Contar los clientes asociados a este contrato 
         $clientsCount = Client::where('id_plan', $contract->id)->count();

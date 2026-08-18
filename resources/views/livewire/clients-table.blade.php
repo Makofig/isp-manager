@@ -1,166 +1,128 @@
 <div>
     @if (session('success'))
     <script>
-    Swal.fire({
-        icon: 'success',
-        title: '¡Hecho!',
-        text: `{{ session('success') }}`,
-        timer: 2000,
-        showConfirmButton: false
-    })
+        window.toast.success(`{{ session('success') }}`);
     </script>
     @endif
-    <div 
-        wire:loading.delay
-        wire:target="search, id_plan, previousPage, nextPage, gotoPage"
-        class="fixed inset-0 min-h-screen bg-slate-900/40 backdrop-blur-md items-center flex justify-center z-[9999]">
 
-        <div class="relative top-1/2 grid place-items-center">
-            <div class="animate-spin h-12 w-12 border-4 border-blue-600 border-t-transparent rounded-full mx-auto"></div>
-            <p class="mt-3 text-white font-semibold text-lg ">
-                Actualizando datos...
-            </p>
-        </div>
-
-    </div> 
     <!-- Search and Filter -->
-    <div class="m-6 flex flex-col sm:flex-row gap-4">
-        <div class="relative flex-grow">
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                    <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
-                </svg>
-            </div>
-            <input wire:model.live.debounce.500ms="search" type="text" class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg w-full " placeholder="Search clients...">
-        </div>
-        <select wire:model.lazy="id_plan" class="border border-gray-300 rounded-lg px-4 py-2  w-full sm:w-auto">
+    <div class="flex flex-col sm:flex-row gap-3 mb-4">
+        <x-search-input model="search" placeholder="Search clients..." />
+        <select wire:model.lazy="id_plan" class="input-dark w-full sm:w-48 text-sm">
             <option value="">All Contracts</option>
             @foreach ($contracts as $contract)
-            <option value="{{ $contract->id }}">{{ $contract->megabytes }}</option>
+            <option value="{{ $contract->id }}">{{ $contract->megabytes }} MB</option>
             @endforeach
         </select>
     </div>
-    <div class="overflow-x-auto" wire:loading.class="opacity-50">
-        <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
+
+    <!-- Table -->
+    <div class="relative overflow-x-auto rounded-[8px] border border-dark-border" wire:loading.class="opacity-50">
+        <table class="min-w-full">
+            <thead class="bg-dark-elevated">
                 <tr>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Name
-                    </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        IP Address
-                    </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Contracts
-                    </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Paid
-                    </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Owed
-                    </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Status
-                    </th>
-                    <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Actions
-                    </th>
+                    <th scope="col" class="px-4 py-3 text-left text-[11px] font-medium text-muted uppercase tracking-wider">Name</th>
+                    <th scope="col" class="px-4 py-3 text-left text-[11px] font-medium text-muted uppercase tracking-wider">IP Address</th>
+                    <th scope="col" class="px-4 py-3 text-left text-[11px] font-medium text-muted uppercase tracking-wider">Contract</th>
+                    <th scope="col" class="px-4 py-3 text-left text-[11px] font-medium text-muted uppercase tracking-wider">Status</th>
+                    <th scope="col" class="px-4 py-3 text-right text-[11px] font-medium text-muted uppercase tracking-wider">Actions</th>
                 </tr>
             </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
-                @foreach ($clients as $client)
-                <!-- Row 1 -->
-                <tr class="hover:bg-gray-50 transition-colors duration-150">
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="flex items-center">
-                            <div class="h-10 w-10 flex-shrink-0">
+            <tbody class="divide-y divide-dark-border">
+                @forelse ($clients as $client)
+                <tr class="hover:bg-dark-elevated/50 transition-colors duration-150" data-table-row>
+                    <td class="px-4 py-3.5">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full overflow-hidden bg-dark-elevated flex-shrink-0">
                                 <img
-                                    class="h-10 w-10 rounded-full object-cover"
-                                    src="{{ $client->imagen 
-                                        ? asset('storage/clients/' . $client->imagen) 
+                                    class="w-8 h-8 object-cover"
+                                    src="{{ $client->imagen
+                                        ? asset('storage/clients/' . $client->imagen)
                                         : asset('images/default-avatar.png') }}"
-                                    alt="{{ $client->nombre }} {{ $client->apellido }}">
+                                    alt="{{ $client->nombre }}">
                             </div>
-                            <div class="ml-4">
-                                <div class="text-sm font-medium text-gray-900">{{ $client->nombre}} - {{ $client->apellido }}</div>
-                                <div class="text-sm text-gray-500">{{ $client->direccion }}</div>
+                            <div>
+                                <div class="text-sm text-text-primary">{{ $client->nombre }} {{ $client->apellido }}</div>
+                                <div class="text-xs text-muted">{{ $client->direccion }}</div>
                             </div>
                         </div>
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm text-gray-900">{{ $client->ip }}</div>
+                    <td class="px-4 py-3.5">
+                        <span class="text-sm text-text-secondary font-mono">{{ $client->ip }}</span>
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
+                    <td class="px-4 py-3.5">
                         @if ($client->contract)
-                            <div class="text-sm text-gray-900">{{ $client->contract->megabytes }}</div>
-                        @else 
-                            <div class="text-sm text-gray-500">No Contract</div>
-                        @endif    
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="px-2 text-xs inline-flex rounded-full bg-green-100 text-green-800">{{ $client->paid_count }}</div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800 ">{{ $client->debtors_count }}</div>
-                    </td>
-                    <!-- <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                            Active
-                        </span>
-                    </td> -->
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        @if ($client->is_banned)
-                            <button wire:click="toggleBan({{ $client->id }})" 
-                                    class="px-2 py-1 rounded bg-green-300 text-green-800">
-                                Unban
-                            </button>
+                            <span class="text-sm text-text-secondary">{{ $client->contract->megabytes }} MB</span>
                         @else
-                            <button wire:click="toggleBan({{ $client->id }})" 
-                                    class="px-2 py-1 rounded bg-red-300 text-red-800">
-                                Ban
-                            </button>
+                            <span class="text-sm text-muted">—</span>
                         @endif
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <a href="{{ route('clients.show', $client->id) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">Show</a>
-                        <a href="{{ route('clients.edit', $client->id) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</a>
-                        <form id="delete-client-{{ $client->id }}" 
-                            action="{{ route('clients.destroy', $client->id) }}" 
+                    <td class="px-4 py-3.5">
+                        @if ($client->is_banned)
+                            <x-ui-badge variant="banned">BANNED</x-ui-badge>
+                        @else
+                            <x-ui-badge variant="active">ACTIVE</x-ui-badge>
+                        @endif
+                    </td>
+                    <td class="px-4 py-3.5">
+                        <div class="flex items-center justify-end gap-1">
+                            <a href="{{ route('clients.show', $client->id) }}" class="p-2 rounded-[6px] text-muted hover:bg-dark-elevated hover:text-text-primary" title="View">
+                                <x-icon name="eye" class="w-4 h-4" />
+                            </a>
+                            <a href="{{ route('clients.edit', $client->id) }}" class="p-2 rounded-[6px] text-muted hover:bg-dark-elevated hover:text-text-primary" title="Edit">
+                                <x-icon name="edit" class="w-4 h-4" />
+                            </a>
+                            @if ($client->is_banned)
+                                <button wire:click="toggleBan({{ $client->id }})" class="p-2 rounded-[6px] text-muted hover:bg-success/10 hover:text-success" title="Unban">
+                                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>
+                                </button>
+                            @else
+                                <button wire:click="toggleBan({{ $client->id }})" class="p-2 rounded-[6px] text-muted hover:bg-warning/10 hover:text-warning" title="Ban">
+                                    <x-icon name="ban" class="w-4 h-4" />
+                                </button>
+                            @endif
+                            <button
+                                type="button"
+                                class="p-2 rounded-[6px] text-muted hover:bg-danger/10 hover:text-danger"
+                                title="Delete"
+                                onclick="window.confirmDelete('¿Eliminar cliente?', 'Esta acción no se puede deshacer.', '{{ route('clients.destroy', $client->id) }}', 'delete-client-{{ $client->id }}')"
+                            >
+                                <x-icon name="trash" class="w-4 h-4" />
+                            </button>
+                        </div>
+                        <form id="delete-client-{{ $client->id }}"
+                            action="{{ route('clients.destroy', $client->id) }}"
                             method="POST" style="display: none;">
                             @csrf
                             @method('DELETE')
                         </form>
-                        <button type="button" 
-                                class="text-red-600 hover:text-red-900" 
-                                onclick="confirmDelete(`{{ $client->id }}`)">
-                            Delete
-                        </button>
                     </td>
                 </tr>
-                @endforeach
+                @empty
+                <tr>
+                    <td colspan="5" class="px-4 py-12">
+                        <x-ui-empty-state
+                            title="No clients found"
+                            message="Try changing your search filters or create a new client."
+                            icon="users"
+                        />
+                    </td>
+                </tr>
+                @endforelse
             </tbody>
         </table>
+
+        <!-- Loading Overlay -->
+        <div wire:loading.delay wire:target="search, id_plan, previousPage, nextPage, gotoPage" class="absolute inset-0 z-10 flex items-center justify-center bg-dark-bg/60 backdrop-blur-sm rounded-[8px]">
+            <div class="flex flex-col items-center gap-2">
+                <div class="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin"></div>
+                <span class="text-[10px] text-muted uppercase tracking-wider">Loading...</span>
+            </div>
+        </div>
     </div>
+
     <!-- Pagination -->
-
-    <x-pagination :paginator="$clients" />
-
+    <div class="mt-4">
+        <x-pagination :paginator="$clients" />
+    </div>
 </div>
-<script>
-function confirmDelete(clientId) {
-    Swal.fire({
-        title: '¿Estás seguro?',
-        text: "Esta acción no se puede deshacer",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#d33',
-        cancelButtonColor: '#3085d6',
-        confirmButtonText: 'Sí, eliminar',
-        cancelButtonText: 'Cancelar'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            document.getElementById(`delete-client-${clientId}`).submit();
-        }
-    })
-}
-</script>

@@ -8,6 +8,7 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
+use App\Providers\AuthServiceProvider;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -28,6 +29,7 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withProviders([
         LivewireServiceProvider::class, // 👈 fuerza el registro si autodiscovery está apagado
+        AuthServiceProvider::class,
     ])
     ->withExceptions(function (Exceptions $exceptions): void {
         //

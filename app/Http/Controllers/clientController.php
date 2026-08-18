@@ -8,19 +8,19 @@ use App\Models\Access_Point;
 use App\Models\Payments;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Barryvdh\DomPDF\Facade\Pdf; 
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class clientController extends Controller
 {
+    use AuthorizesRequests;
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        // obtener todos los clientes 
-        # $clientes = Client::all(); 
-        // Pasar los cliente a la vista 
-        # $contracts = Contracts::all();
+        $this->authorize('viewAny', Client::class);
+
         return view('clients.index');
     }
 
@@ -41,7 +41,8 @@ class clientController extends Controller
      */
     public function create()
     {
-        // Retornar la vista para crear el usuario
+        $this->authorize('create', Client::class);
+
         $contracts = Contracts::all();
         $points = Access_Point::all();
         return view('clients.create', compact('contracts', 'points'));
@@ -52,6 +53,8 @@ class clientController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', Client::class);
+
         // guardar el cliente
         /*
         $client = new Client();
@@ -109,15 +112,9 @@ class clientController extends Controller
      */
     public function show(string $id)
     {
-        // mostrar la información de un cliente
         $client = Client::findOrFail($id);
+        $this->authorize('view', $client);
 
-        // Obtener los pagos asociados al cliente
-        /*
-        $payments = Payments::where('id_cliente', $client->id)
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
-        */
         return view('clients.show', compact('client'));
     }
 
@@ -126,8 +123,9 @@ class clientController extends Controller
      */
     public function edit(string $id)
     {
-        // Mostramos la pagina para editar el cliente
         $client = Client::findOrFail($id);
+        $this->authorize('update', $client);
+
         $contracts = Contracts::all();
         $points = Access_Point::all();
         return view('clients.edit', compact('client', 'contracts', 'points'));
@@ -138,6 +136,9 @@ class clientController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $client = Client::findOrFail($id);
+        $this->authorize('update', $client);
+
         // Recibir los datos para actualizar el cliente
         $validated = $request->validate([
             'first_name' => 'required|string|max:255',
@@ -161,8 +162,6 @@ class clientController extends Controller
             'file_upload.image'        => 'The file must be a valid image.',
             'file_upload.max'          => 'The image cannot exceed 2 MB.',
         ]);
-
-        $client = Client::findOrFail($id);
 
         // Si viene nueva imagen
         if ($request->hasFile('file_upload')) {
@@ -200,8 +199,10 @@ class clientController extends Controller
      */
     public function destroy(string $id)
     {
-        // Eliminar un cliente seleccionado
         $client = Client::findOrFail($id);
+        $this->authorize('delete', $client);
+
+        // Eliminar un cliente seleccionado
 
         // Si tiene imagen, borrarla
         if ($client->imagen && Storage::disk('public')->exists("clients/{$client->imagen}")) {

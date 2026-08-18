@@ -1,23 +1,3 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Quota') }}
-        </h2>
-    </x-slot>
-    @if (session('success'))
-    <script>
-        Swal.fire({
-            icon: 'success',
-            title: '¡Made!',
-            text: `{{ session('success') }}`,
-            timer: 2000,
-            showConfirmButton: false
-        })
-    </script>
-    @endif
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <x-quota :quotas="$quotas" />
-        </div>
-    </div>
+    <x-quota />
 </x-app-layout>

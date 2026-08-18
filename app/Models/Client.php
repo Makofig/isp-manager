@@ -20,10 +20,11 @@ class Client extends Model
     // public $timestamps = false;
 
     protected $fillable = [
-        'id_plan', 
-        'id_point', 
+        'id_plan',
+        'id_point',
         'nombre',
         'apellido',
+        'email',
         'direccion',
         'telefono',
         'ip',

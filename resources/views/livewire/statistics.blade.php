@@ -1,153 +1,137 @@
 <div>
-    <div>
-        <div class="p-6 space-y-6">
+    <!-- KPIs -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
+        <x-stat-card title="PAID" :value="$clientesConPago" icon="check" />
+        <x-stat-card title="DEBTORS" :value="$deudores" icon="alert-triangle" />
+        <x-stat-card title="BANNED" :value="$clientesBaneados" icon="ban" />
+        <x-stat-card title="REVENUE" :value="'$' . number_format($recaudado, 0)" icon="bar-chart-2" />
+        <x-stat-card title="PENDING" :value="'$' . number_format($pendiente, 0)" icon="alert-triangle" />
+        <x-stat-card title="DELINQUENCY" :value="$morosidad . '%'" icon="alert-triangle" />
+    </div>
 
-            <!-- KPIs -->
-            <div class="grid grid-cols-6 gap-6">
-                <div class="bg-white p-4 shadow rounded-lg text-center">
-                    <h4 class="text-sm text-gray-500">Pagados</h4>
-                    <p class="text-2xl font-bold text-blue-600">{{ $clientesConPago }}</p>
-                </div>
-                <div class="bg-white p-4 shadow rounded-lg text-center">
-                    <h4 class="text-sm text-gray-500">Deudores</h4>
-                    <p class="text-2xl text-red-600 font-bold">{{ $deudores }}</p>
-                </div>
-                <div class="bg-white p-4 shadow rounded-lg text-center">
-                    <h4 class="text-sm text-gray-500">Baneados</h4>
-                    <p class="text-2xl text-red-600 font-bold">{{ $clientesBaneados }}</p>
-                </div>
-                <div class="bg-white p-4 shadow rounded-lg text-center">
-                    <h4 class="text-sm text-gray-500">Recaudado</h4>
-                    <p class="text-2xl font-bold text-green-600">${{ number_format($recaudado,0) }}</p>
-                </div>
-                <div class="bg-white p-4 shadow rounded-lg text-center">
-                    <h4 class="text-sm text-gray-500">Pendiente</h4>
-                    <p class="text-2xl font-bold text-red-600">${{ number_format($pendiente,0) }}</p>
-                </div>
-                <div class="bg-white p-4 shadow rounded-lg text-center">
-                    <h4 class="text-sm text-gray-500">Morosidad</h4>
-                    <p class="text-2xl font-bold text-orange-500">{{ $morosidad }}%</p>
-                </div>
-            </div>
-
-            <!-- Filtros -->
-            <div class="bg-white p-4 shadow rounded-lg flex gap-4 items-center">
-                <div>
-                    <label class="block text-sm font-medium">Mes</label>
-                    <select wire:model.live="mes" class="border rounded p-2 w-32">
-                        @foreach(range(1,12) as $m)
-                        <option value="{{ $m }}">{{ \Carbon\Carbon::create()->month($m)->format('F') }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium">Año</label>
-                    <select wire:model.live="anio" class="border rounded p-2 w-20">
-                        @foreach(range(2023, now()->year) as $y)
-                        <option value="{{ $y }}">{{ $y }}</option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
-
-            <!-- Gráficas -->
-            <div class="grid grid-cols-2 gap-6">
-                <div class="bg-white p-4 shadow rounded-lg">
-                    <h3 class="text-lg font-semibold mb-4">📊 Puntualidad de Pagos</h3>
-                    <canvas id="chartPuntualidad"></canvas>
-                </div>
-                <!-- <div class="bg-white p-4 shadow rounded-lg">
-                    <h3 class="text-lg font-semibold mb-4">💳 Deudores</h3>
-                    <p class="text-2xl text-red-600 font-bold">{{ $deudores }}</p>
-                </div> -->
-            </div>
-
-            <!-- Recaudación + Morosos -->
-            <div class="grid grid-cols-2 gap-6">
-                <div wire:ignore class="bg-white p-4 shadow rounded-lg">
-                    <h3 class="text-lg font-semibold mb-4">💰 Recaudación Mensual</h3>
-                    <canvas id="chartRecaudacion"></canvas>
-                </div>
-                <div class="bg-white p-4 shadow rounded-lg">
-                    <h3 class="text-lg font-semibold mb-4">🚨 Clientes Morosos (mes actual)</h3>
-                    <!-- Tabla con altura fija -->
-                    <div class="max-h-[500px] overflow-y-auto">
-                        <table class="min-w-full border">
-                            <thead class="bg-gray-100 sticky top-0">
-                                <tr>
-                                    <th class="px-4 py-2 text-left">Cliente</th>
-                                    <th class="px-4 py-2 text-left">Monto Pendiente</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($morosos as $c)
-                                <tr class="border-t">
-                                    <td class="px-4 py-2">{{ $c->nombre }}</td>
-                                    <td class="px-4 py-2 text-red-600">
-                                        ${{ number_format($c->contract->costo,0) }}
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
+    <!-- Filters -->
+    <div class="stat-card flex flex-wrap gap-3 items-center mb-6">
+        <div>
+            <label class="block text-[11px] font-medium text-muted uppercase tracking-wider mb-1">Month</label>
+            <select wire:model.live="mes" class="input-dark w-32 text-sm">
+                @foreach(range(1,12) as $m)
+                <option value="{{ $m }}">{{ \Carbon\Carbon::create()->month($m)->format('F') }}</option>
+                @endforeach
+            </select>
+        </div>
+        <div>
+            <label class="block text-[11px] font-medium text-muted uppercase tracking-wider mb-1">Year</label>
+            <select wire:model.live="anio" class="input-dark w-24 text-sm">
+                @foreach(range(2023, now()->year) as $y)
+                <option value="{{ $y }}">{{ $y }}</option>
+                @endforeach
+            </select>
         </div>
     </div>
+
+    <!-- Charts -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
+        <div class="stat-card">
+            <h3 class="text-[11px] font-medium text-muted uppercase tracking-wider mb-4">Payment Punctuality</h3>
+            <div class="relative h-64">
+                <canvas id="chartPuntualidad"></canvas>
+            </div>
+        </div>
+        <div class="stat-card" wire:ignore>
+            <h3 class="text-[11px] font-medium text-muted uppercase tracking-wider mb-4">Monthly Revenue</h3>
+            <div class="relative h-64">
+                <canvas id="chartRecaudacion"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Morosos Table -->
+    <div class="stat-card">
+        <h3 class="text-[11px] font-medium text-muted uppercase tracking-wider mb-4">Delinquent Clients (Current Month)</h3>
+        @if(count($morosos) > 0)
+            <div class="max-h-[400px] overflow-y-auto">
+                <table class="min-w-full">
+                    <thead class="sticky top-0 bg-dark-surface">
+                        <tr>
+                            <th class="px-4 py-2 text-left text-[11px] font-medium text-muted uppercase tracking-wider">Client</th>
+                            <th class="px-4 py-2 text-left text-[11px] font-medium text-muted uppercase tracking-wider">Pending Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-dark-border">
+                        @foreach($morosos as $c)
+                        <tr>
+                            <td class="px-4 py-2.5 text-sm text-text-primary">{{ $c->nombre }}</td>
+                            <td class="px-4 py-2.5 text-sm text-danger font-medium">${{ number_format($c->contract->costo ?? 0, 0) }}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        @else
+            <p class="text-sm text-muted py-4">No delinquent clients this month.</p>
+        @endif
+    </div>
 </div>
+
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // Función para actualizar los gráficos
         function updateCharts(recaudado, pendiente, rangos) {
-            chartPuntualidad.config.data.datasets[0].data = [rangos['1-10'], rangos['11-20'], rangos['>21']];
-            chartPuntualidad.update();
-
-            chartRecaudacion.config.data.datasets[0].data = [recaudado, pendiente];
-            chartRecaudacion.update();
+            if (chartPuntualidad) {
+                chartPuntualidad.config.data.datasets[0].data = [rangos['1-10'], rangos['11-20'], rangos['>21']];
+                chartPuntualidad.update();
+            }
+            if (chartRecaudacion) {
+                chartRecaudacion.config.data.datasets[0].data = [recaudado, pendiente];
+                chartRecaudacion.update();
+            }
         }
+
+        const colors = window.chartColors || { accent: '#58A6FF', success: '#3FB950', warning: '#D29922', danger: '#F85149', muted: '#5D6670', text: '#8B949E', border: '#252D36' };
 
         const chartPuntualidad = new Chart(document.getElementById('chartPuntualidad'), {
             type: 'bar',
             data: {
-                labels: ['1-10 días', '11-20 días', '>21 días'],
+                labels: ['1-10 days', '11-20 days', '>21 days'],
                 datasets: [{
-                    label: 'Clientes',
-                    data: [{{ $rangos['1-10'] }}, {{ $rangos['11-20'] }}, {{ $rangos['>21'] }}],
-                    backgroundColor: ['#4CAF50', '#FFC107', '#F44336']
+                    label: 'Clients',
+                    data: [{{ $rangos['1-10'] ?? 0 }}, {{ $rangos['11-20'] ?? 0 }}, {{ $rangos['>21'] ?? 0 }}],
+                    backgroundColor: [colors.success, colors.warning, colors.danger],
                 }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { ticks: { color: colors.text }, grid: { color: colors.border } },
+                    y: { ticks: { color: colors.text }, grid: { color: colors.border } },
+                }
             }
         });
 
         const chartRecaudacion = new Chart(document.getElementById('chartRecaudacion'), {
             type: 'doughnut',
             data: {
-                labels: ['Recaudado', 'Pendiente'],
+                labels: ['Collected', 'Pending'],
                 datasets: [{
-                    data: [{{ $recaudado }}, {{ $pendiente }}],
-                    backgroundColor: ['#4CAF50', '#F44336']
+                    data: [{{ $recaudado ?? 0 }}, {{ $pendiente ?? 0 }}],
+                    backgroundColor: [colors.success, colors.danger],
+                    borderWidth: 0,
                 }]
             },
             options: {
-                plugins: {
-                    legend: {
-                        position: 'bottom'
-                    }
-                }
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom', labels: { color: colors.text, font: { family: 'JetBrains Mono' } } } },
             }
         });
 
-    document.addEventListener("livewire:init", () => {
-        Livewire.on('updateCharts', (data) => {
-            console.log("📊 Datos recibidos:", data);
-
-            const { recaudado, pendiente, rangos } = data[0];
-            
-            updateCharts(recaudado, pendiente, rangos);
+        document.addEventListener("livewire:init", () => {
+            Livewire.on('updateCharts', (data) => {
+                const { recaudado, pendiente, rangos } = data[0];
+                updateCharts(recaudado, pendiente, rangos);
+            });
         });
-    });
-</script>
-    @endpush
-</div>
+    </script>
+@endpush

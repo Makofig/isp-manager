@@ -121,3 +121,12 @@ Route::middleware([
     Route::post('/read-all', [NotificationController::class, 'markAllRead'])->name('notifications.read-all');
     Route::post('/{notification}/read', [NotificationController::class, 'markRead'])->name('notifications.read');
 });
+
+// Ruta Admin (placeholder)
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified',
+])->group(function () {
+    Route::get('/admin', fn () => view('admin.index'))->name('admin');
+});

@@ -36,7 +36,28 @@ class UserFactory extends Factory
             'remember_token' => Str::random(10),
             'profile_photo_path' => null,
             'current_team_id' => null,
+            'role' => 'admin',
         ];
+    }
+
+    /**
+     * Indicate that the user should have the operator role.
+     */
+    public function operator(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => 'operator',
+        ]);
+    }
+
+    /**
+     * Indicate that the user should have the auditor role.
+     */
+    public function auditor(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => 'auditor',
+        ]);
     }
 
     /**

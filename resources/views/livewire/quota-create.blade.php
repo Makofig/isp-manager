@@ -120,37 +120,12 @@
         </div>
     </div>
     <script>
-        // function confirmCreate() {
-        //     Swal.fire({
-        //         title: 'You\'re sure?',
-        //         text: "This action will create the quota for the current month.",
-        //         icon: 'warning',
-        //         showCancelButton: true,
-        //         confirmButtonColor: '#d33',
-        //         cancelButtonColor: '#3085d6',
-        //         confirmButtonText: 'Yes, create it!',
-        //         cancelButtonText: 'Cancel'
-        //     }).then((result) => {
-        //         if (result.isConfirmed) {
-        //             document.getElementById('create-form').submit();
-        //         }
-        //     })
-        // }
         Livewire.on('show-confirm', () => {
-            Swal.fire({
-                title: "You're sure?",
-                text: "This action will create the quota for the current month.",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Yes, create it!',
-                cancelButtonText: 'Cancel'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    Livewire.dispatch('execute-save');
-                }
-            })
+            window.confirmAction(
+                '¿Generar cuotas?',
+                'Esta acción creará las cuotas para el mes actual.',
+                () => Livewire.dispatch('execute-save')
+            );
         })
 
         Livewire.on('quota-finished', () => {

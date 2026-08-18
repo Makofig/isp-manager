@@ -1,174 +1,80 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Clients Payments') }}
-        </h2>
-    </x-slot>
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="container max-w-6xl">
-                <div class="bg-white rounded-xl shadow-md overflow-hidden">
-                    <!-- Table Header -->
-                    <div class="p-6 border-b border-gray-200">
-                        <div class="flex flex-col md:flex-row md:items-center md:justify-between">
-                            <div>
-                                <h2 class="text-xl font-bold text-gray-800">Pay - {{ $payment->cuota->created_at->format('M d, Y') }}</h2>
-                                <p class="text-gray-500 mt-1">Manage information payment here.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex flex-wrap py-10 px-2">
-                        <img
-                            class="h-32 w-32 rounded-full object-cover"
-                            src="{{ $payment->clients->imagen
-                                        ? asset('storage/clients/' . $payment->clients->imagen)
-                                        : asset('images/default-avatar.png') }}"
-                            alt="{{ $payment->clients->nombre }} {{ $payment->clients->apellido }}">
-                        <div class="flex flex-col justify-center ml-4">
-                            <h3 class="text-lg font-semibold text-gray-800">{{ $payment->clients->nombre }} {{ $payment->clients->apellido }}</h3>
-                            <p class="text-gray-500">{{ $payment->clients->email }}</p>
-                            <p class="text-gray-500">Phone: {{ $payment->clients->telefono }}</p>
-                            <p class="text-gray-500">{{ $payment->clients->ip }}</p>
-                            <p class="text-gray-500">{{ $payment->clients->direccion }}</p>
+<x-page-header title="Update Payment" description="Client: {{ $payment->clients->nombre ?? 'N/A' }} {{ $payment->clients->apellido ?? '' }}" />
 
-                        </div>
-                    </div>
-                    <div>
-                        <div>
-                            <div class="flex justify-center py-5">
-                                <div class="w-full md:w-2/4 bg-white border border-gray-300 rounded-lg shadow-md p-6">
-                                    <div class="text-gray-700">
-                                        <p id="price" class="flex justify-center mb-4 text-lg font-semibold">
-                                            Price: <strong id="priceValue" data-price="{{ $payment->costo }}" class="ml-1">$ {{ number_format($payment->costo, 2) }}</strong>
-                                        </p>
-
-                                        <form id="update-{{ $payment->id }}" action="{{ route('payments.update', $payment->id) }}" method="POST" enctype="multipart/form-data" class="flex flex-col items-center">
-                                            @csrf
-                                            @method('PUT')
-
-                                            <!-- Amount -->
-                                            <div class="mb-4 w-full">
-                                                <label for="amount" class="block text-gray-700 font-bold mb-2">Amount:</label>
-                                                <input type="number" name="amount" id="amount"
-                                                    value="{{ old('amount', $payment->abonado) }}"
-                                                    step="0.01"
-                                                    class="shadow border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring focus:ring-indigo-300"
-                                                    required>
-                                                <p id="amountError" class="mt-2 text-sm hidden"></p>
-                                                @error('amount')
-                                                <p class="text-red-500 text-xs italic mt-2 text-center">{{ $message }}</p>
-                                                @enderror
-                                            </div>
-
-                                            <!-- Coment -->
-                                            <div class="mb-4 w-full">
-                                                <label for="coment" class="block text-gray-700 font-bold mb-2">Coment:</label>
-                                                <input type="text" name="coment" id="coment"
-                                                    value="{{ old('coment', $payment->comentario) }}"
-                                                    class="shadow border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring focus:ring-indigo-300"
-                                                    required>
-                                                @error('coment')
-                                                <p class="text-red-500 text-xs italic mt-2 text-center">{{ $message }}</p>
-                                                @enderror
-                                            </div>
-
-                                            <!-- Payment Date -->
-                                            <div class="mb-4 w-full">
-                                                <label for="payment_date" class="block text-gray-700 font-bold mb-2">Payment Date:</label>
-                                                <input type="date" name="payment_date" id="payment_date"
-                                                    value="{{ old('payment_date', $payment->fecha_pago) }}"
-                                                    class="shadow border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring focus:ring-indigo-300"
-                                                    required>
-                                                @error('payment_date')
-                                                <p class="text-red-500 text-xs italic mt-2 text-center">{{ $message }}</p>
-                                                @enderror
-                                            </div>
-
-                                            <!-- Voucher -->
-                                            <div class="mb-4 w-full">
-                                                <p class="flex justify-center mb-2 font-bold">Upload payment vouchers</p>
-                                                <input type="file" name="voucher" id="voucher"
-                                                    class="shadow border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring focus:ring-indigo-300"
-                                                    required>
-                                                @error('voucher')
-                                                <p class="text-red-500 text-xs italic mt-2 text-center">{{ $message }}</p>
-                                                @enderror
-                                            </div>
-
-                                            <!-- Botón -->
-                                            <div class="mt-4">
-                                                <button type="button"
-                                                    class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
-                                                    onclick="confirmUpdate(`{{ $payment->id }}`)">
-                                                    Save Payment
-                                                </button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                        <x-button-previous />
-                    </div>
-                </div>
-            </div>     
+    <div class="max-w-lg">
+        <div class="stat-card mb-4">
+            <div class="flex items-center justify-between">
+                <span class="text-[11px] font-medium text-muted uppercase tracking-wider">Price</span>
+                <span class="text-lg font-semibold text-text-primary">${{ number_format($payment->costo, 2) }}</span>
+            </div>
         </div>
+
+        <form id="update-{{ $payment->id }}" action="{{ route('payments.update', $payment->id) }}" method="POST" enctype="multipart/form-data" class="stat-card space-y-4">
+            @csrf
+            @method('PUT')
+
+            <x-ui-input type="number" name="amount" label="Amount" placeholder="0.00" :value="old('amount', $payment->abonado)" step="0.01" :error="$errors->first('amount')" />
+            <p id="amountError" class="text-xs hidden -mt-2"></p>
+
+            <x-ui-input type="text" name="coment" label="Comment" placeholder="Payment note..." :value="old('coment', $payment->comentario)" :error="$errors->first('coment')" />
+
+            <x-ui-input type="date" name="payment_date" label="Payment Date" :value="old('payment_date', $payment->fecha_pago)" :error="$errors->first('payment_date')" />
+
+            <div class="space-y-1.5">
+                <label class="block text-[11px] font-medium text-muted uppercase tracking-wider">Voucher</label>
+                <input type="file" name="voucher" id="voucher" class="input-dark w-full text-sm file:mr-3 file:py-1.5 file:px-3 file:rounded-[6px] file:border-0 file:text-xs file:font-medium file:bg-accent/10 file:text-accent hover:file:bg-accent/20" />
+                @error('voucher'))
+                    <p class="text-xs text-danger">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div class="flex items-center justify-end gap-3 pt-2">
+                <a href="{{ url()->previous() }}" class="btn-ghost text-sm">Cancel</a>
+                <button type="submit" class="btn-primary text-sm">Save Payment</button>
+            </div>
+        </form>
     </div>
 </x-app-layout>
-<script>
-    function confirmUpdate(paymentId) {
-        Swal.fire({
-            title: 'You\'re sure?',
-            text: "This action will update the payment details.",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Yes, update it!',
-            cancelButtonText: 'Cancel'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                document.getElementById(`update-${paymentId}`).submit();
-            }
-        })
-    }
 
-    // Validación del campo de precio
+<script>
     document.addEventListener("DOMContentLoaded", () => {
         const amountInput = document.getElementById("amount");
-        const priceValue = parseFloat(document.getElementById("priceValue").dataset.price);
+        const priceValue = parseFloat(document.getElementById("priceValue")?.dataset.price || 0);
         const errorMessage = document.getElementById("amountError");
 
-        amountInput.addEventListener("input", () => {
-            const value = parseFloat(amountInput.value);
+        if (amountInput && errorMessage) {
+            amountInput.addEventListener("input", () => {
+                const value = parseFloat(amountInput.value);
 
-            if (isNaN(value)) {
-                amountInput.classList.remove("border-green-500", "border-red-500");
-                errorMessage.classList.add("hidden");
-                return;
-            }
+                if (isNaN(value)) {
+                    amountInput.classList.remove("border-green-500", "border-red-500");
+                    errorMessage.classList.add("hidden");
+                    return;
+                }
 
-            if (value < priceValue) {
-                amountInput.classList.remove("border-green-500");
-                amountInput.classList.add("border-red-500");
-                errorMessage.textContent = `The amount entered is less than the price of the installment ($${priceValue.toFixed(2)}).`;
-                errorMessage.classList.remove("hidden");
-                errorMessage.classList.add("text-red-600");
-            } else if (value === priceValue) {
-                amountInput.classList.remove("border-red-500");
-                amountInput.classList.add("border-green-500");
-                errorMessage.textContent = "Monto correcto.";
-                errorMessage.classList.remove("hidden");
-                errorMessage.classList.remove("text-red-600");
-                errorMessage.classList.add("text-green-600");
-            } else {
-                amountInput.classList.remove("border-green-500");
-                amountInput.classList.add("border-red-500");
-                errorMessage.textContent = `The amount cannot exceed the value of the installment ($${priceValue.toFixed(2)}).`;
-                errorMessage.classList.remove("hidden");
-                errorMessage.classList.add("text-red-600");
-            }
-        });
+                if (value < priceValue) {
+                    amountInput.classList.remove("border-green-500");
+                    amountInput.classList.add("border-danger");
+                    errorMessage.textContent = `The amount entered is less than the price of the installment ($${priceValue.toFixed(2)}).`;
+                    errorMessage.classList.remove("hidden");
+                    errorMessage.classList.add("text-danger");
+                    errorMessage.classList.remove("text-success");
+                } else if (value === priceValue) {
+                    amountInput.classList.remove("border-danger");
+                    amountInput.classList.add("border-success");
+                    errorMessage.textContent = "Correct amount.";
+                    errorMessage.classList.remove("hidden");
+                    errorMessage.classList.remove("text-danger");
+                    errorMessage.classList.add("text-success");
+                } else {
+                    amountInput.classList.remove("border-success");
+                    amountInput.classList.add("border-danger");
+                    errorMessage.textContent = `The amount cannot exceed the value of the installment ($${priceValue.toFixed(2)}).`;
+                    errorMessage.classList.remove("hidden");
+                    errorMessage.classList.add("text-danger");
+                    errorMessage.classList.remove("text-success");
+                }
+            });
+        }
     });
 </script>

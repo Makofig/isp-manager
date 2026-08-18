@@ -1,130 +1,67 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+        <title>{{ config('app.name', 'InterSys') }} — Network Management</title>
 
         <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-        
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
-        <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-        <!-- AlpineJS -->
-        <!-- <script src="//unpkg.com/alpinejs" defer></script> -->
-        <!-- Styles -->
+        <!-- Chart.js (for dashboard/statistics pages) -->
         <script>
-            window.paymentsChart = window.paymentsChart || null;
-            window.statusesChart = window.statusesChart || null;
+            window.chartColors = {
+                accent: '#58A6FF',
+                success: '#3FB950',
+                warning: '#D29922',
+                danger: '#F85149',
+                muted: '#5D6670',
+                text: '#8B949E',
+                border: '#252D36',
+            };
+        </script>
 
-            function renderCharts(paymentsPerMonth, paymentStatuses) {
-
-                if (!paymentsPerMonth || !paymentStatuses) {
-                    console.log(paymentStatuses, paymentsPerMonth);
-                    console.warn('Datos de gráficos inválidos');
-                    return;
-                }
-
-                const months = Object.keys(paymentsPerMonth);
-                const cuotas = months.map(m => paymentsPerMonth[m].totalCuotas);
-                const pagados = months.map(m => paymentsPerMonth[m].totalPagado);
-                const deudas = months.map(m => paymentsPerMonth[m].deuda);
-
-                if (window.paymentsChart) window.paymentsChart.destroy();
-
-                window.paymentsChart = new Chart(
-                    document.getElementById('paymentsPerMonthChart'),
-                    {
-                        type: 'bar',
-                        data: {
-                            labels: months,
-                            datasets: [
-                                { label: 'Cuotas Emitidas', data: cuotas, backgroundColor: '#3b82f6' },
-                                { label: 'Pagado', data: pagados, backgroundColor: '#10b981' },
-                                { label: 'Deuda', data: deudas, backgroundColor: '#ef4444' },
-                            ]
-                        },
-                        options: {
-                            responsive: true,
-                            plugins: { legend: { position: 'bottom' } }
-                        }
-                    }
-                );
-
-                const statusLabels = Object.keys(paymentStatuses).map(s => s == 1 ? 'Pagado' : 'Pendiente');
-                const statusData = Object.values(paymentStatuses);
-
-                const backgroundColors = Object.keys(paymentStatuses).map(s =>
-                    s == 1 ? '#10b981' : '#ef4444'
-                );
-
-                if (window.statusesChart) window.statusesChart.destroy();
-
-                window.statusesChart = new Chart(
-                    document.getElementById('paymentStatusesChart'),
-                    {
-                        type: 'pie',
-                        data: {
-                            labels: statusLabels,
-                            datasets: [{
-                                data: statusData,
-                                backgroundColor: backgroundColors
-                            }]
-                        },
-                        options: { responsive: true }
-                    }
-                );
-            }
-
-            document.addEventListener('livewire:init', () => {
-
-                Livewire.on('refreshCharts', (event) => { 
-
-                    const payload = event[0]; // 👈 ESTE ES EL DETALLE
-
-                    renderCharts(
-                        payload.paymentsPerMonth,
-                        payload.paymentStatuses
-                    );
-
-                });
-
-            });
-        </script> 
         @livewireStyles
     </head>
-   
+
     <body class="font-sans antialiased">
-        <x-banner />
+        <div x-data class="min-h-screen bg-dark-bg">
+            <script>
+                document.addEventListener('alpine:init', () => {
+                    Alpine.store('sidebar', {
+                        collapsed: false,
+                        toggle() {
+                            this.collapsed = !this.collapsed;
+                        }
+                    });
+                });
+            </script>
+            <!-- Sidebar -->
+            <x-sidebar />
 
-        <div class="min-h-screen bg-gray-100">
-            @livewire('navigation-menu')
+            <!-- Main Content Area -->
+            <div :class="$store.sidebar.collapsed ? 'lg:ml-[72px]' : 'lg:ml-[260px]'" x-data class="transition-all duration-150">
+                <!-- Topbar -->
+                <x-topbar />
 
-            <!-- Page Heading -->
-            @if (isset($header))
-                <header class="bg-white shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
-                    </div>
-                </header>
-            @endif
-
-            <!-- Page Content -->
-            <main>
-                {{ $slot }}
-            </main>
+                <!-- Page Content -->
+                <main class="min-h-[calc(100vh-64px)] p-6 lg:p-8 max-w-8xl mx-auto">
+                    {{ $slot }}
+                </main>
+            </div>
         </div>
 
-        @stack('modals')
-        @stack('scripts')
+        <!-- Global UI containers -->
+        <x-ui-toast position="top-right" />
 
+        @stack('modals')
         @livewireScripts
-        @stack('scripts')
     </body>
 </html>

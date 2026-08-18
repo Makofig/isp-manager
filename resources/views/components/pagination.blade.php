@@ -1,56 +1,47 @@
 <!-- Pagination -->
-<div class="bg-white px-4 py-3 border-t border-gray-200 sm:px-6">
-    <div class="flex items-center justify-between flex-col sm:flex-row">
-        <div class="mb-4 sm:mb-0">
-            @if ($paginator->hasPages())
-                <span class="text-sm text-gray-700">
-                    {{ __('Showing') }} <span class="font-medium">{{ $paginator->firstItem() }}</span> {{ __('to') }} <span class="font-medium">{{ $paginator->lastItem() }}</span> {{ __('of') }} <span class="font-medium">{{ $paginator->total() }}</span> {{ __('results') }}
+<div class="flex items-center justify-between flex-col sm:flex-row gap-3">
+    <div>
+        @if ($paginator->hasPages())
+            <span class="text-xs text-muted">
+                Showing <span class="text-text-secondary">{{ $paginator->firstItem() }}</span> to <span class="text-text-secondary">{{ $paginator->lastItem() }}</span> of <span class="text-text-secondary">{{ $paginator->total() }}</span> results
+            </span>
+        @endif
+    </div>
+    <div>
+        @if ($paginator->hasPages())
+        <nav class="flex items-center gap-1" aria-label="Pagination">
+            @if ($paginator->onFirstPage())
+                <span class="p-2 rounded-[6px] text-muted cursor-not-allowed">
+                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" /></svg>
+                </span>
+            @else
+                <a href="#" wire:click.prevent="previousPage" class="p-2 rounded-[6px] text-muted-light hover:bg-dark-elevated hover:text-text-primary">
+                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" /></svg>
+                </a>
+            @endif
+
+            @foreach ($paginator->links()->elements[0] ?? [] as $page => $url)
+                @if ($page == $paginator->currentPage())
+                    <span class="px-3 py-1.5 rounded-[6px] bg-accent/10 text-accent text-sm font-medium">
+                        {{ $page }}
+                    </span>
+                @else
+                    <a href="#" wire:click.prevent="gotoPage({{ $page }})" class="px-3 py-1.5 rounded-[6px] text-muted-light text-sm hover:bg-dark-elevated hover:text-text-primary">
+                        {{ $page }}
+                    </a>
+                @endif
+            @endforeach
+
+            @if ($paginator->hasMorePages())
+                <a href="#" wire:click.prevent="nextPage" class="p-2 rounded-[6px] text-muted-light hover:bg-dark-elevated hover:text-text-primary">
+                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg>
+                </a>
+            @else
+                <span class="p-2 rounded-[6px] text-muted cursor-not-allowed">
+                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg>
                 </span>
             @endif
-        </div>
-        <div>
-            @if ($paginator->hasPages())
-            <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-                @if ($paginator->onFirstPage()) 
-                    <span class="sr-only disabled">
-                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                            <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
-                        </svg>
-                    </span>
-                @else 
-                <a href="#" wire:click.prevent="previousPage" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                        <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
-                    </svg>
-                </a>
-                @endif
-                @foreach ($paginator->links()->elements[0] ?? [] as $page => $url)
-                    @if ($page == $paginator->currentPage())
-                        <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-indigo-50 text-sm font-medium text-indigo-600 hover:bg-indigo-100">
-                            {{ $page }}
-                        </span>
-                    @else
-                        <a href="#" wire:click.prevent="gotoPage({{ $page }})" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
-                            {{ $page }}
-                        </a>
-                    @endif
-                @endforeach    
-                @if ($paginator->hasMorePages())
-                    <a href="#" wire:click.prevent="nextPage" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                        <span class="sr-only">Next</span>
-                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-                        </svg>
-                    </a>
-                @else
-                    <span class="sr-only disabled">
-                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-                        </svg>
-                    </span>
-                @endif
-            </nav>
-            @endif
-        </div>
+        </nav>
+        @endif
     </div>
 </div>

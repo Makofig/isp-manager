@@ -55,7 +55,7 @@
 
                             <div class="mt-6 flex items-center justify-end gap-x-6">
                                 <a href="{{ route('quota') }}" type="button" class="rounded-md text-sm font-semibold px-3 py-2 text-gray-900 hover:bg-indigo-500 hover:text-white">Cancel</a>
-                                <button type="button" onclick="confirmCreate()" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Save</button>
+                                <button type="button" onclick="window.confirmDelete('¿Generar cuotas?', 'Esta acción creará las cuotas para el mes actual.', '{{ route('quota.store') }}', 'create-form')" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Save</button>
                             </div>
                         </form>
                     </div>
@@ -64,21 +64,3 @@
         </div>
     </div>
 </x-app-layout>
-<script>
-function confirmCreate() {
-    Swal.fire({
-        title: 'You\'re sure?',
-        text: "This action will create the quota for the current month.",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#d33',
-        cancelButtonColor: '#3085d6',
-        confirmButtonText: 'Yes, create it!',
-        cancelButtonText: 'Cancel'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            document.getElementById('create-form').submit();
-        }
-    })
-}
-</script>
