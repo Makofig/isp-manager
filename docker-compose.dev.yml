@@ -1,0 +1,33 @@
+# Docker Compose Override for Development
+# Usage: docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+
+services:
+  app:
+    build: 
+      args:
+        APP_ENV: local     
+
+    environment:
+      APP_ENV: local
+      APP_DEBUG: "true"
+
+    command: >
+      sh -c "
+      php artisan config:clear &&
+      php artisan cache:clear &&
+      php artisan migrate --force --seed &&
+      php-fpm
+      "
+  setup:
+    build:
+      args:
+        APP_ENV: local
+
+  queue:
+    build:
+      args:
+        APP_ENV: local
+        
+  nginx:
+    ports:
+      - "5005:80"

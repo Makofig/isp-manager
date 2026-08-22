@@ -14,9 +14,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('cuotas', function (Blueprint $table) {
-            $table->unique('numero');
-        });
+        if (! Schema::hasIndex('cuotas', 'cuotas_numero_unique')) {
+            Schema::table('cuotas', function (Blueprint $table) {
+                $table->unique('numero');
+            });
+        }
     }
 
     /**
@@ -24,8 +26,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('cuotas', function (Blueprint $table) {
-            $table->dropUnique('cuotas_numero_unique');
-        });
+        if (Schema::hasIndex('cuotas', 'cuotas_numero_unique')) {
+            Schema::table('cuotas', function (Blueprint $table) {
+                $table->dropUnique('cuotas_numero_unique');
+            });
+        }
     }
 };

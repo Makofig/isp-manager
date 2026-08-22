@@ -1,0 +1,26 @@
+comment:
+  layout: "reach, diff, flags, files"
+  behavior: default
+  require_changes: false
+  require_base: false
+  require_head: true
+
+coverage:
+  status:
+    project:
+      default:
+        target: 50%
+        threshold: 5%
+    patch:
+      default:
+        target: 60%
+        threshold: 5%
+
+ignore:
+  - "config/"
+  - "database/"
+  - "resources/"
+  - "routes/"
+  - "tests/"
+  - "vendor/"
+  - "*.blade.php"
