@@ -3,10 +3,15 @@
         x-data="{ open: false }"
         @keydown.escape.window="open = false">
 
-        @if ($payment->estado == 1)
+        @if ($payment->is_paid)
         <div class="flex flex-col items-center justify-center mb-4">
             <img src="{{ asset('images/icon-check.svg') }}" alt="Pago realizado" class="w-16 h-16 object-contain">
             <p class="text-green-600 font-semibold py-5">Paid: $ {{ number_format($payment->costo, 2) }}</p>
+        </div>
+        @elseif ($payment->has_partial_payment)
+        <div class="flex flex-col items-center justify-center mb-4">
+            <img src="{{ asset('images/icon-partial.svg') }}" alt="Pago parcial" class="w-16 h-16 object-contain">
+            <p class="text-yellow-600 font-semibold py-5">Partial Payment</p>
         </div>
         @else
         <div class="flex flex-col items-center justify-center mb-4">
@@ -16,12 +21,16 @@
         @endif
 
         <h4 class="text-lg font-semibold text-gray-800">Payment Details</h4>
+        <p class="text-gray-500">Fee: $ {{ number_format($payment->costo, 2) }}</p>
         @if ($payment->abonado > 0)
-        <p class="text-gray-500">Amount: ${{ number_format($payment->abonado, 2) }}</p>
+        <p class="text-gray-500">Paid: $ {{ number_format($payment->abonado, 2) }}</p>
+        <p class="text-gray-500">Remaining: $ {{ number_format($payment->remaining_amount, 2) }}</p>
         @else
-        <p class="text-gray-500">Amount: $ 0.00</p>
+        <p class="text-gray-500">Paid: $ 0.00</p>
         @endif
+        @if ($payment->comentario)
         <p class="text-gray-500">Comment: {{ $payment->comentario }}</p>
+        @endif
 
         <!-- Comprobante -->
         <div class="mt-4">

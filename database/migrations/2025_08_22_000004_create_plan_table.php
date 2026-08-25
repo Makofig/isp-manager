@@ -1,0 +1,28 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        if (Schema::hasTable('plan')) {
+            return;
+        }
+
+        Schema::create('plan', function (Blueprint $table) {
+            $table->id();
+            $table->string('nombre', 150);
+            $table->integer('megabytes')->nullable();
+            $table->decimal('costo', 12, 2);
+            $table->timestamps();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('plan');
+    }
+};

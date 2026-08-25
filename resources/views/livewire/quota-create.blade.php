@@ -60,28 +60,27 @@
                                 Save</button>
                             </div>
                         </form>
-                        @if($loading)
-                            <div 
-                                wire:poll.1000ms="checkProgress"
-                                class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
-                            >
-                                <div class="bg-white p-6 rounded-2xl w-96">
-                                    <h2 class="text-lg font-semibold mb-4">
-                                        Generating Fees...
-                                    </h2>
+                         @if($loading)
+                             <div 
+                                 class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
+                             >
+                                 <div class="bg-white p-6 rounded-2xl w-96">
+                                     <h2 class="text-lg font-semibold mb-4">
+                                         Generating Fees...
+                                     </h2>
 
-                                    <div class="w-full bg-gray-200 rounded-full h-4">
-                                        <div class="bg-blue-600 h-4 rounded-full transition-all"
-                                            style="width: {{ $progress }}%">
-                                        </div>
-                                    </div>
+                                     <div class="w-full bg-gray-200 rounded-full h-4">
+                                         <div id="quota-progress-bar" class="bg-blue-600 h-4 rounded-full transition-all"
+                                             style="width: {{ $progress }}%">
+                                         </div>
+                                     </div>
 
-                                    <p class="mt-2 text-sm text-gray-600">
-                                        {{ $progress }}%
-                                    </p>
-                                </div>
-                            </div>
-                        @endif
+                                     <p id="quota-progress-text" class="mt-2 text-sm text-gray-600">
+                                         {{ $progress }}%
+                                     </p>
+                                 </div>
+                             </div>
+                         @endif
                     </div>
                 </div>
             </div>
@@ -124,5 +123,25 @@
         Livewire.on('execute-save', () => {
             @this.save()
         })
+
+        // WebSocket: Listen for quota progress updates
+        document.addEventListener('livewire:init', () => {
+            const quotaId = @this.get('quotaId');
+            if (quotaId && window.Echo) {
+                window.Echo.channel('quota.' + quotaId)
+                    .listen('ProgressUpdated', (e) => {
+                        const progressBar = document.getElementById('quota-progress-bar');
+                        const progressText = document.getElementById('quota-progress-text');
+                        if (progressBar) progressBar.style.width = e.progress + '%';
+                        if (progressText) progressText.textContent = e.progress + '%';
+
+                        if (e.progress >= 100) {
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 1500);
+                        }
+                    });
+            }
+        });
     </script>
 </div>

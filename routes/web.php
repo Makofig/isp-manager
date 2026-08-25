@@ -2,12 +2,15 @@
 
 use Illuminate\Support\Facades\Route;
 
-// Import controladores 
-use App\Http\Controllers\clientController; 
+// Import controladores
+use App\Http\Controllers\clientController;
 use App\Http\Controllers\contractController;
 use App\Http\Controllers\access_pointController;
 use App\Http\Controllers\paymentController;
 use App\Http\Controllers\quotaController;
+use App\Http\Controllers\ProveedorController;
+use App\Http\Controllers\GastoController;
+use App\Http\Controllers\DashboardMetricsController;
 use App\Livewire\QuotaCreate;
 
 Route::get('/', function () {
@@ -87,7 +90,7 @@ Route::middleware([
     Route::post('/store', [quotaController::class, 'store'])->name('quota.store');
 });
 
-// Rutas de los pagos 
+// Rutas de los pagos
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
@@ -97,6 +100,8 @@ Route::middleware([
     Route::get('/show/{id}', [paymentController::class, 'show'])->name('payments.show');
     Route::get('/edit/{id}', [paymentController::class, 'edit'])->name('payments.edit');
     Route::put('/update/{id}', [paymentController::class, 'update'])->name('payments.update');
+    Route::post('/retry', [paymentController::class, 'retry'])->name('payments.retry');
+    Route::get('/export/pdf', [paymentController::class, 'exportPdf'])->name('payments.export.pdf');
 });
 
 Route::middleware([
@@ -108,4 +113,36 @@ Route::middleware([
     Route::get('/statistics', function () {
         return view('statistics');
     })->name('statistics');
+    Route::get('/api/metrics/profitability', [DashboardMetricsController::class, 'profitabilityMetrics'])->name('metrics.profitability');
+});
+
+// Rutas de Proveedores
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified',
+    'throttle:auth-users',
+])->prefix('proveedores')->group(function () {
+    Route::get('/', [ProveedorController::class, 'index'])->name('proveedores.index');
+    Route::get('/create', [ProveedorController::class, 'create'])->name('proveedores.create');
+    Route::post('/', [ProveedorController::class, 'store'])->name('proveedores.store');
+    Route::get('/{proveedor}', [ProveedorController::class, 'show'])->name('proveedores.show');
+    Route::get('/{proveedor}/edit', [ProveedorController::class, 'edit'])->name('proveedores.edit');
+    Route::put('/{proveedor}', [ProveedorController::class, 'update'])->name('proveedores.update');
+    Route::delete('/{proveedor}', [ProveedorController::class, 'destroy'])->name('proveedores.destroy');
+});
+
+// Rutas de Gastos
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified',
+    'throttle:auth-users',
+])->prefix('gastos')->group(function () {
+    Route::get('/', [GastoController::class, 'index'])->name('gastos.index');
+    Route::get('/create', [GastoController::class, 'create'])->name('gastos.create');
+    Route::post('/', [GastoController::class, 'store'])->name('gastos.store');
+    Route::get('/{gasto}/edit', [GastoController::class, 'edit'])->name('gastos.edit');
+    Route::put('/{gasto}', [GastoController::class, 'update'])->name('gastos.update');
+    Route::delete('/{gasto}', [GastoController::class, 'destroy'])->name('gastos.destroy');
 });

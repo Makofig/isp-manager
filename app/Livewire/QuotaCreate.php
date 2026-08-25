@@ -4,10 +4,8 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use App\Models\Quota;
-use App\Models\Client;
-use App\Jobs\GenerateQuotaPayments; 
-use App\Jobs\GenerateQuota; 
-use Carbon\Carbon; 
+use App\Jobs\GenerateQuotaPayments;
+use Carbon\Carbon;
 
 class QuotaCreate extends Component
 {
@@ -55,7 +53,7 @@ class QuotaCreate extends Component
         }
 
         $quota = Quota::create([
-            'numero' => Carbon::now()->month,
+            'numero' => $month,
         ]);
 
         $this->quotaId = $quota->id;

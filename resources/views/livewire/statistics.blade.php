@@ -14,7 +14,7 @@
                 </div>
                 <div class="bg-white p-4 shadow rounded-lg text-center">
                     <h4 class="text-sm text-gray-500">Baneados</h4>
-                    <p class="text-2xl text-red-600 font-bold">{{ $clientesBaneados }}</p>
+                    <p class="text-2xl text-red-600 font-bold">{{ $clientesBaneados?? 0 }}</p>
                 </div>
                 <div class="bg-white p-4 shadow rounded-lg text-center">
                     <h4 class="text-sm text-gray-500">Recaudado</h4>

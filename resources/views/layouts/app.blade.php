@@ -12,7 +12,7 @@
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
         
         <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
+        @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/echo.js'])
         <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -126,5 +126,31 @@
 
         @livewireScripts
         @stack('scripts')
+
+        <!-- WebSocket Global Listeners -->
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                if (typeof window.Echo !== 'undefined') {
+                    // Dashboard channel - real-time notifications
+                    window.Echo.channel('dashboard')
+                        .listen('PaymentRegistered', (e) => {
+                            console.log('[WebSocket] Payment registered:', e);
+                            // Refresh dashboard metrics if visible
+                            const event = new CustomEvent('dashboard-payment-updated', { detail: e });
+                            window.dispatchEvent(event);
+                        })
+                        .listen('ExpenseRegistered', (e) => {
+                            console.log('[WebSocket] Expense registered:', e);
+                            const event = new CustomEvent('dashboard-expense-updated', { detail: e });
+                            window.dispatchEvent(event);
+                        })
+                        .listen('ProviderUpdated', (e) => {
+                            console.log('[WebSocket] Provider updated:', e);
+                            const event = new CustomEvent('dashboard-provider-updated', { detail: e });
+                            window.dispatchEvent(event);
+                        });
+                }
+            });
+        </script>
     </body>
 </html>

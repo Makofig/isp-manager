@@ -47,11 +47,26 @@ services:
       MYSQL_PASSWORD: admin123456
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./db.sql:/docker-entrypoint-initdb.d/db.sql
     ports:
       - "3309:3306"
     networks:
       - laravel
+
+  queue:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    container_name: laravel_queue
+    restart: unless-stopped
+    working_dir: /var/www
+    depends_on:
+      mysql:
+        condition: service_started
+    volumes:
+      - .:/var/www
+    networks:
+      - laravel
+    command: php artisan queue:work --sleep=3 --tries=3 --timeout=120
 
 volumes:
   mysql_data:

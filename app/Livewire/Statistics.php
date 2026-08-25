@@ -21,25 +21,36 @@ class Statistics extends Component
 
     public function render()
     {
-        // Total de clientes
-        $totalClientes = Client::count();
+        $cacheKey = "stats_{$this->anio}_{$this->mes}";
+        $data = cache()->remember($cacheKey, 300, fn() => $this->computeStats());
 
-        // Clientes baneados 
+        $this->dispatch('updateCharts', [
+            'recaudado' => $data['recaudado'],
+            'pendiente' => $data['pendiente'],
+            'rangos'    => $data['rangos'],
+        ]);
+
+        return view('livewire.statistics', array_merge($data, [
+            'mes' => $this->mes,
+            'anio' => $this->anio,
+        ]));
+    }
+
+    private function computeStats(): array
+    {
+        $totalClientes = Client::count();
         $bannedClients = Client::where('is_banned', true)->count();
-        // 💰 Recaudado y esperado (evitamos NULLs en fecha_pago)
-        $recaudado = Payments::whereNotNull('fecha_pago')
-            ->whereMonth('fecha_pago', $this->mes)
-            ->whereYear('fecha_pago', $this->anio)
+
+        $paymentsQuery = Payments::whereMonth('created_at', $this->mes)
+            ->whereYear('created_at', $this->anio);
+
+        $recaudado = (clone $paymentsQuery)
+            ->whereNotNull('fecha_pago')
             ->sum('abonado');
 
-        $totalEsperado = Payments::whereNotNull('created_at')
-            ->whereMonth('created_at', $this->mes)
-            ->whereYear('created_at', $this->anio)
-            ->sum('costo');
-
+        $totalEsperado = (clone $paymentsQuery)->sum('costo');
         $pendiente = $totalEsperado - $recaudado;
 
-        // ✅ Clientes con pago (estado=1 y abonado>0)
         $clientesConPago = Payments::whereNotNull('fecha_pago')
             ->whereMonth('fecha_pago', $this->mes)
             ->whereYear('fecha_pago', $this->anio)
@@ -48,68 +59,40 @@ class Statistics extends Component
             ->distinct('id_cliente')
             ->count('id_cliente');
 
-        // % morosidad
-        $morosidad = $totalClientes > 0 
-            ? round((($totalClientes - $clientesConPago) / $totalClientes) * 100, 2) 
+        $morosidad = $totalClientes > 0
+            ? round((($totalClientes - $clientesConPago) / $totalClientes) * 100, 2)
             : 0;
 
-        // 📊 Rangos de puntualidad
+        $diasMes = Carbon::create($this->anio, $this->mes)->daysInMonth;
         $rangos = [
-            '1-10' => Payments::whereNotNull('fecha_pago')
-                ->whereMonth('fecha_pago', $this->mes)
-                ->whereYear('fecha_pago', $this->anio)
-                ->whereBetween(DB::raw('DAY(fecha_pago)'), [1, 10])
-                ->count() ?? 0,
-
-            '11-20' => Payments::whereNotNull('fecha_pago')
-                ->whereMonth('fecha_pago', $this->mes)
-                ->whereYear('fecha_pago', $this->anio)
-                ->whereBetween(DB::raw('DAY(fecha_pago)'), [11, 20])
-                ->count() ?? 0,
-
-
-            '>21' => Payments::whereNotNull('fecha_pago')
-                ->whereMonth('fecha_pago', $this->mes)
-                ->whereYear('fecha_pago', $this->anio)
-                ->where(DB::raw('DAY(fecha_pago)'), '>', 21)
-                ->count() ?? 0,
+            '1-10'  => $this->pagosEnRango(1, 10),
+            '11-20' => $this->pagosEnRango(11, 20),
+            '>21'   => $this->pagosEnRango(21, $diasMes),
         ];
 
-        // 📊 Deudores
         $deudores = $totalClientes - $clientesConPago;
 
-        // 🚨 Clientes que NO pagaron hasta el 15
         $morosos = Client::whereNotIn('id', function ($q) {
             $q->select('id_cliente')
                 ->from('pagos')
                 ->whereNotNull('fecha_pago')
                 ->whereMonth('fecha_pago', $this->mes)
                 ->whereYear('fecha_pago', $this->anio)
-                ->whereDay('fecha_pago', '<=', 15);
-        })->get();
+                ->where('estado', 1);
+        })->with('contract')->get();
 
-        $this->dispatch('updateCharts', [
-            'recaudado' => $recaudado,
-            'pendiente' => $pendiente,
-            'rangos'    => [
-                '1-10' => $rangos['1-10'],
-                '11-20' => $rangos['11-20'],
-                '>21' => $rangos['>21'],
-            ],
-        ]);
+        return compact(
+            'totalClientes', 'bannedClients', 'recaudado', 'pendiente',
+            'clientesConPago', 'morosidad', 'rangos', 'deudores', 'morosos'
+        );
+    }
 
-        return view('livewire.statistics', [
-            'totalClientes' => $totalClientes,
-            'clientesConPago' => $clientesConPago,
-            'clientesBaneados' => $bannedClients,
-            'recaudado'     => $recaudado,
-            'pendiente'     => $pendiente,
-            'morosidad'     => $morosidad,
-            'rangos'        => $rangos,
-            'deudores'      => $deudores,
-            'morosos'       => $morosos,
-            'mes'           => $this->mes,
-            'anio'          => $this->anio,
-        ]);
+    private function pagosEnRango(int $desde, int $hasta): int
+    {
+        return Payments::whereNotNull('fecha_pago')
+            ->whereMonth('fecha_pago', $this->mes)
+            ->whereYear('fecha_pago', $this->anio)
+            ->whereBetween(DB::raw('DAY(fecha_pago)'), [$desde, $hasta])
+            ->count();
     }
 }

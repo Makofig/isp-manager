@@ -7,6 +7,8 @@ use App\Models\Client;
 use App\Models\Quota;
 use App\Models\Payments;
 use App\Models\Contracts;
+use App\Models\Proveedor;
+use App\Models\Gasto;
 use Illuminate\Support\Facades\DB;
 
 class Dashboard extends Component
@@ -19,11 +21,34 @@ class Dashboard extends Component
     public $paymentStatuses;
     public $topDebtors;
     public $topPayers;
-    public $totalMegabytesUsed; 
+    public $totalMegabytesUsed;
+
+    // Profitability metrics
+    public $monthRevenue;
+    public $providerCosts;
+    public $monthExpenses;
+    public $netProfit;
+    public $marginPercent;
+    public $isProfitable;
+
+    protected $listeners = ['refreshDashboard' => 'refreshData'];
+
+    public function refreshData()
+    {
+        cache()->forget('stats_global');
+        $data = $this->cacheData();
+        foreach ($data as $key => $value) {
+            $this->$key = $value;
+        }
+        $this->dispatch('refreshCharts', [
+            'paymentsPerMonth' => $this->paymentsPerMonth,
+            'paymentStatuses' => $this->paymentStatuses,
+        ]);
+    }
 
     public function cacheData() {
-        return cache()->remember('stast_global', 30, function() {
-            return [
+        return cache()->remember('stats_global', 300, function() {
+            $data = [
                 'totalClients' => Client::count(),
                 'totalPayments' => Payments::count(),
                 'totalPaid' => Payments::where('estado', '1')->sum('abonado'),
@@ -47,37 +72,53 @@ class Dashboard extends Component
                     ->pluck('total', 'estado')
                     ->toArray(),
                 'topDebtors' => Client::withSum(['pagos as deuda' => function ($q) {
-                    $q->where('estado', '0'); // cuotas no pagadas
+                    $q->where('estado', '0');
                 }], 'costo')
                     ->orderByDesc('deuda')
                     ->take(5)
                     ->get()
                     ->toArray(),
                 'topPayers' => Client::withSum(['pagos as total_paid' => function ($q) {
-                        $q->where('estado', 1); // Solo pagos confirmados
+                        $q->where('estado', 1);
                     }], 'abonado')
                     ->orderByDesc('total_paid')
                     ->take(5)
                     ->get()
                     ->toArray(),
-            ]; 
-        }); 
+            ];
+
+            // Profitability
+            $data['monthRevenue'] = Payments::where('estado', 1)
+                ->whereYear('fecha_pago', now()->year)
+                ->whereMonth('fecha_pago', now()->month)
+                ->sum('abonado');
+            $data['providerCosts'] = Proveedor::activos()->sum('precio_total');
+            $data['monthExpenses'] = Gasto::whereYear('fecha_gasto', now()->year)
+                ->whereMonth('fecha_gasto', now()->month)
+                ->sum('monto');
+            $totalCosts = $data['providerCosts'] + $data['monthExpenses'];
+            $data['netProfit'] = $data['monthRevenue'] - $totalCosts;
+            $data['marginPercent'] = $data['monthRevenue'] > 0
+                ? round(($data['netProfit'] / $data['monthRevenue']) * 100, 2)
+                : 0;
+            $data['isProfitable'] = $data['netProfit'] > 0;
+
+            return $data;
+        });
     }
 
     public function mount()
     {
-        
         $data = $this->cacheData();
 
         foreach ($data as $key => $value) {
-             $this->$key = $value; 
+             $this->$key = $value;
         }
 
         $this->dispatch('refreshCharts', [
             'paymentsPerMonth' => $this->paymentsPerMonth,
             'paymentStatuses' => $this->paymentStatuses,
         ]);
-       
     }
 
     public function render()

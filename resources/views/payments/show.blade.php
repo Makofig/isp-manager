@@ -12,7 +12,7 @@
                     <div class="p-6 border-b border-gray-200">
                         <div class="flex flex-col md:flex-row md:items-center md:justify-between">
                             <div>
-                                <h2 class="text-xl font-bold text-gray-800">Details Payments - {{ $payment->cuota->created_at->format('M d, Y') }}</h2>
+                                <h2 class="text-xl font-bold text-gray-800">Details Payments - {{ optional($payment->cuota)->created_at ? $payment->cuota->created_at->format('M d, Y') : 'N/A' }}</h2>
                                 <p class="text-gray-500 mt-1">View and manage information payment here.</p>
                             </div>
                         </div>
@@ -26,11 +26,9 @@
                             alt="{{ $payment->clients->nombre }} {{ $payment->clients->apellido }}">
                         <div class="flex flex-col justify-center ml-4">
                             <h3 class="text-lg font-semibold text-gray-800">{{ $payment->clients->nombre }} {{ $payment->clients->apellido }}</h3>
-                            <p class="text-gray-500">{{ $payment->clients->email }}</p>
                             <p class="text-gray-500">Phone: {{ $payment->clients->telefono }}</p>
-                            <p class="text-gray-500">{{ $payment->clients->ip }}</p>
+                            <p class="text-gray-500">IP: {{ $payment->clients->ip }}</p>
                             <p class="text-gray-500">{{ $payment->clients->direccion }}</p>
-
                         </div>
                     </div>
                     <div>
