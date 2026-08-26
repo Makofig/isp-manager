@@ -39,9 +39,9 @@
 
                                     <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                                         <div class="sm:col-span-3">
-                                            <label for="ssid" class="block text-sm/6 font-medium text-gray-900">SSID</label>
+                                            <label for="ssid" class="block text-sm/6 font-medium text-gray-900">SSID *</label>
                                             <div class="mt-2">
-                                                <input id="ssid" type="text" name="ssid" value="{{ $point->ssid ? $point->ssid : old('ssid') }}" autocomplete="given-name" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
+                                                <input id="ssid" type="text" name="ssid" value="{{ old('ssid', $point->ssid) }}" autocomplete="off" required class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
                                                 @error('ssid')
                                                     <span class="text-red-600 text-sm">{{ $message }}</span>
                                                 @enderror
@@ -49,9 +49,9 @@
                                         </div>
 
                                         <div class="sm:col-span-3">
-                                            <label for="frequency" class="block text-sm/6 font-medium text-gray-900">Frequency</label>
+                                            <label for="frequency" class="block text-sm/6 font-medium text-gray-900">Frequency *</label>
                                             <div class="mt-2">
-                                                <input id="frequency" type="text" name="frequency" value="{{ $point->frecuencia ? $point->frecuencia : old('frequency') }}" autocomplete="family-name" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
+                                                <input id="frequency" type="text" name="frequency" value="{{ old('frequency', $point->frecuencia) }}" autocomplete="off" required class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
                                                 @error('frequency')
                                                     <span class="text-red-600 text-sm">{{ $message }}</span>
                                                 @enderror
@@ -59,9 +59,9 @@
                                         </div>
 
                                         <div class="sm:col-span-3">
-                                            <label for="ip_address" class="block text-sm/6 font-medium text-gray-900">IP Address</label>
+                                            <label for="ip_address" class="block text-sm/6 font-medium text-gray-900">IP Address (optional)</label>
                                             <div class="mt-2">
-                                                <input id="ip_address" type="text" name="ip_address" value="{{ $point->ip_ap ? $point->ip_ap : old('ip_address') }}" autocomplete="ip_address" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
+                                                <input id="ip_address" type="text" name="ip_address" value="{{ old('ip_address', $point->ip_ap) }}" autocomplete="off" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
                                                 @error('ip_address')
                                                     <span class="text-red-600 text-sm">{{ $message }}</span>
                                                 @enderror
@@ -69,9 +69,9 @@
                                         </div>
 
                                         <div class="col-span-full">
-                                            <label for="location" class="block text-sm/6 font-medium text-gray-900">Location</label>
+                                            <label for="location" class="block text-sm/6 font-medium text-gray-900">Location *</label>
                                             <div class="mt-2">
-                                                <input id="location" type="text" name="location" value="{{ $point->localidad ? $point->localidad : old('location') }}" autocomplete="location" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
+                                                <input id="location" type="text" name="location" value="{{ old('location', $point->localidad) }}" autocomplete="off" required class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
                                                 @error('location')
                                                     <span class="text-red-600 text-sm">{{ $message }}</span>
                                                 @enderror

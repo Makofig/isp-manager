@@ -38,9 +38,9 @@
 
                                     <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                                         <div class="sm:col-span-3">
-                                            <label for="name" class="block text-sm/6 font-medium text-gray-900">Name</label>
+                                            <label for="name" class="block text-sm/6 font-medium text-gray-900">Name *</label>
                                             <div class="mt-2">
-                                                <input id="name" type="text" name="name" value="{{ old('name') }}" autocomplete="given-name" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
+                                                <input id="name" type="text" name="name" value="{{ old('name') }}" autocomplete="given-name" required class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
                                                 @error('name')
                                                     <span class="text-red-600 text-sm">{{ $message }}</span>
                                                 @enderror
@@ -48,9 +48,9 @@
                                         </div>
 
                                         <div class="sm:col-span-3">
-                                            <label for="megabytes" class="block text-sm/6 font-medium text-gray-900">Megabytes</label>
+                                            <label for="megabytes" class="block text-sm/6 font-medium text-gray-900">Megabytes *</label>
                                             <div class="mt-2">
-                                                <input id="megabytes" type="number" name="megabytes" value="{{ old('megabytes') }}" autocomplete="family-name" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
+                                                <input id="megabytes" type="number" name="megabytes" value="{{ old('megabytes') }}" min="1" autocomplete="off" required class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
                                                 @error('megabytes')
                                                     <span class="text-red-600 text-sm">{{ $message }}</span>
                                                 @enderror
@@ -58,9 +58,9 @@
                                         </div>
 
                                         <div class="sm:col-span-3">
-                                            <label for="price" class="block text-sm/6 font-medium text-gray-900">Price</label>
+                                            <label for="price" class="block text-sm/6 font-medium text-gray-900">Price *</label>
                                             <div class="mt-2">
-                                                <input id="price" type="text" name="price" value="{{ old('price') }}" placeholder="0.00" autocomplete="price" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
+                                                <input id="price" type="number" step="0.01" name="price" value="{{ old('price') }}" placeholder="0.00" min="0" autocomplete="off" required class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
                                                 @error('price')
                                                     <span class="text-red-600 text-sm">{{ $message }}</span>
                                                 @enderror

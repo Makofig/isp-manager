@@ -23,7 +23,10 @@
                         <h2 class="text-xl font-bold text-gray-800">Clients Members</h2>
                         <p class="text-gray-500 mt-1">Manage your clients members and their account permissions here.</p>
                     </div>
-                    <div class="mt-4 md:mt-0">
+                    <div class="mt-4 md:mt-0 flex gap-2">
+                        <a href="{{ route('clients.export', 'all') }}" class="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition duration-150 ease-in-out">
+                            Export PDF
+                        </a>
                         <a href="{{ route('clients.create') }}" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg transition duration-150 ease-in-out">
                             Add Client
                         </a>

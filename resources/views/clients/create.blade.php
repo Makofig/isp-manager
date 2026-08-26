@@ -42,7 +42,7 @@
                                         </div>
 
                                         <div class="col-span-full">
-                                            <label for="cover-photo" class="block text-sm/6 font-medium text-gray-900">Cover photo</label>
+                                            <label for="cover-photo" class="block text-sm/6 font-medium text-gray-900">Cover photo (optional)</label>
                                             <div class="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
                                                 <div class="text-center">
                                                     <svg viewBox="0 0 24 24" fill="currentColor" data-slot="icon" aria-hidden="true" class="mx-auto size-12 text-gray-300">
@@ -68,9 +68,9 @@
 
                                     <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                                         <div class="sm:col-span-3">
-                                            <label for="first_name" class="block text-sm/6 font-medium text-gray-900">First name</label>
+                                            <label for="first_name" class="block text-sm/6 font-medium text-gray-900">First name *</label>
                                             <div class="mt-2">
-                                                <input id="first_name" type="text" name="first_name" value="{{ old('first_name') }}" autocomplete="given-name" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
+                                                <input id="first_name" type="text" name="first_name" value="{{ old('first_name') }}" autocomplete="given-name" required class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
                                                 @error('first_name')
                                                     <span class="text-red-600 text-sm">{{ $message }}</span>
                                                 @enderror
@@ -78,9 +78,9 @@
                                         </div>
 
                                         <div class="sm:col-span-3">
-                                            <label for="last_name" class="block text-sm/6 font-medium text-gray-900">Last name</label>
+                                            <label for="last_name" class="block text-sm/6 font-medium text-gray-900">Last name *</label>
                                             <div class="mt-2">
-                                                <input id="last_name" type="text" name="last_name" value="{{ old('last_name') }}" autocomplete="family-name" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
+                                                <input id="last_name" type="text" name="last_name" value="{{ old('last_name') }}" autocomplete="family-name" required class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
                                                 @error('last_name')
                                                     <span class="text-red-600 text-sm">{{ $message }}</span>
                                                 @enderror
@@ -98,9 +98,9 @@
                                         </div>
 
                                         <div class="sm:col-span-4">
-                                            <label for="phone" class="block text-sm/6 font-medium text-gray-900">Phone</label>
+                                            <label for="phone" class="block text-sm/6 font-medium text-gray-900">Phone *</label>
                                             <div class="mt-2">
-                                                <input id="phone" type="tel" name="phone" value="{{ old('phone') }}" autocomplete="tel" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
+                                                <input id="phone" type="tel" name="phone" value="{{ old('phone') }}" autocomplete="tel" required class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
                                                 @error('phone')
                                                     <span class="text-red-600 text-sm">{{ $message }}</span>
                                                 @enderror
@@ -108,7 +108,7 @@
                                         </div>
 
                                         <div class="sm:col-span-3">
-                                            <label for="ip_address" class="block text-sm/6 font-medium text-gray-900">IP Address</label>
+                                            <label for="ip_address" class="block text-sm/6 font-medium text-gray-900">IP Address (optional)</label>
                                             <div class="mt-2">
                                                 <input id="ip_address" type="text" name="ip_address" value="{{ old('ip_address') }}" autocomplete="ip_address" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
                                                 @error('ip_address')
@@ -118,10 +118,10 @@
                                         </div>
 
                                         <div class="sm:col-span-3">
-                                            <label for="contracts_id" class="block text-sm/6 font-medium text-gray-900">Contracts</label>
+                                            <label for="contracts_id" class="block text-sm/6 font-medium text-gray-900">Contract *</label>
                                             <div class="mt-2 grid grid-cols-1">
-                                                <select id="contracts_id" name="contracts_id" autocomplete="contracts_id-name" class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
-                                                    <option>Select a contract</option>
+                                                <select id="contracts_id" name="contracts_id" autocomplete="contracts_id-name" required class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
+                                                    <option value="" disabled>Select a contract</option>
                                                     @foreach ($contracts as $contract)
                                                         <option value="{{ $contract->id }} {{ old('contracts_id') == $contract->id ? 'selected' : '' }}">{{ $contract->megabytes }}</option>
                                                     @endforeach
@@ -136,10 +136,10 @@
                                         </div>
 
                                         <div class="sm:col-span-3">
-                                            <label for="access_point_id" class="block text-sm/6 font-medium text-gray-900">Access Point</label>
+                                            <label for="access_point_id" class="block text-sm/6 font-medium text-gray-900">Access Point *</label>
                                             <div class="mt-2 grid grid-cols-1">
-                                                <select id="access_point_id" name="access_point_id" autocomplete="access_point_id-name" class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
-                                                    <option>Select a point</option>
+                                                <select id="access_point_id" name="access_point_id" autocomplete="access_point_id-name" required class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
+                                                    <option value="" disabled>Select a point</option>
                                                     @foreach ($points as $point)
                                                         <option value="{{ $point->id }} {{ old('access_point_id') == $point->id ? 'selected' : ''}}">{{ $point->ssid }}</option>
                                                     @endforeach
@@ -154,9 +154,9 @@
                                         </div>
 
                                         <div class="col-span-full">
-                                            <label for="street_address" class="block text-sm/6 font-medium text-gray-900">Street address</label>
+                                            <label for="street_address" class="block text-sm/6 font-medium text-gray-900">Street address *</label>
                                             <div class="mt-2">
-                                                <input id="street_address" type="text" name="street_address" value="{{ old('street_address') }}" autocomplete="street_address" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
+                                                <input id="street_address" type="text" name="street_address" value="{{ old('street_address') }}" autocomplete="street_address" required class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
                                                 @error('street_address')
                                                     <span class="text-red-600 text-sm">{{ $message }}</span>
                                                 @enderror

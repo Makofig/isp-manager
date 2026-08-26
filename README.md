@@ -1,60 +1,126 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# ISP Manager
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Panel de gestión para proveedores de internet, construido con [Laravel](https://laravel.com) + Tailwind CSS (Vite).
 
-## About Laravel
+## Requisitos
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- PHP 8.2+ y Composer (para desarrollo local)
+- PostgreSQL 14+ corriendo localmente (la app apunta a `127.0.0.1:5432`, base `intersys_laravel`)
+- Node.js 20+ (para los assets)
+- Docker + Docker Compose (si usás el despliegue contenedorizado)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Despliegue local
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+> La app usa la base de datos local (ver `.env`), así que Postgres debe estar corriendo antes de migrar.
 
-## Learning Laravel
+Abrí **dos terminales** en la raíz del proyecto:
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+**Terminal 1 — backend:**
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+```bash
+# 1. Dependencias
+composer install
+npm install
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+# 2. APP_KEY (solo la primera vez; el .env viene sin key)
+php artisan key:generate
 
-## Laravel Sponsors
+# 3. Migrar + seed
+php artisan migrate --seed
+# → si la base viene sucia o con tablas viejas:
+#   php artisan migrate:fresh --seed
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+# 4. Queue worker (la app tiene jobs en cola: sesiones/cache/cola usan database)
+php artisan queue:work
 
-### Premium Partners
+# 5. Servidor de la app (en el mismo terminal, con Ctrl+Z o en otra pestaña)
+php artisan serve
+```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+**Terminal 2 — assets (hot reload):**
 
-## Contributing
+```bash
+npm run dev
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+**Verificación:**
 
-## Code of Conduct
+- [ ] `http://localhost` responde (o la URL de `APP_URL` en `.env`)
+- [ ] Ingresás con `admin@admin.com` / `admin123456`
+- [ ] El terminal con `queue:work` se queda corriendo sin errores
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Despliegue con Docker
+
+Todo queda definido en `docker-compose.yml` (app + nginx + mysql + queue worker). No necesitás PHP ni Node instalado.
+
+```bash
+# 1. Levantar todo
+docker compose up -d --build
+
+# 2. Verificar que los servicios estén arriba
+docker compose ps
+
+# 3. Revisar logs de la app
+docker compose logs -f app
+
+# 4. Una vez que `app` responde, correr migraciones + seed
+#    dentro del contenedor PHP (tiene PHP, Composer y las extensiones)
+docker compose exec app php artisan migrate --seed
+```
+
+| Servicio | Puerto | Detalle |
+|----------|--------|---------|
+| nginx | `5005` | Front de la app → `http://localhost:5005` |
+| mysql | `3309` | Base `intersys` expuesta para debugging |
+
+El comando del contenedor `app`, al arrancar, ejecuta:
+
+```bash
+php artisan key:generate --force &&
+php artisan config:clear &&
+php artisan cache:clear &&
+php-fpm
+```
+
+Y el servicio `queue` corre el worker por nosotros:
+
+```bash
+php artisan queue:work --sleep=3 --tries=3 --timeout=120
+```
+
+**Notas importantes del setup Docker:**
+
+- Las migraciones **no se corren automáticamente** en el contenedor `app`: hay que ejecutarlas manualmente con `docker compose exec app php artisan migrate --seed` cada vez que arrancás con una base vacía o cambiás el schema.
+- El `.env` del host se monta tal cual en el contenedor (volumen `.`); asegurate de que `DB_*` sea consistente con el servicio de BD (`DB_HOST=mysql`, usuario `admin`, password `admin123456`, base `intersys`).
+- `APP_KEY`: el `key:generate --force` sobreescribe la key del `.env` en cada arranque. Con el volumen `.` montado es aceptable en dev, pero generá una key fija si la querés estable entre reinicios.
+
+## Cuentas por defecto
+
+| Rol | Email | Password |
+|-----|-------|----------|
+| Admin | `admin@admin.com` | `admin123456` |
+| Test | `test@example.com` | `password` |
+
+Los defaults se pueden sobreescribir vía `.env` (`ADMIN_EMAIL`, `ADMIN_NAME`, `ADMIN_PASSWORD`). El seeder es idempotente: re-correrlo no duplica usuarios.
+
+## Colas (resumen)
+
+| Entorno | Cómo corre el worker |
+|---------|----------------------|
+| Local | `php artisan queue:work` en su propia terminal (no detener) |
+| Docker | Servicio `queue` de `docker-compose.yml` (arranca solo con `up`) |
+
+## Estructura relevante
+
+- `app/` — código PHP (models, controllers, services)
+- `database/migrations/` — schema (users, proveedores, planes, cuotas, pagos, clientes, etc.)
+- `database/seeders/` — `AdminUserSeeder` + `DatabaseSeeder`
+- `resources/` — vistas Blade + assets (Tailwind)
+- `docker/` — Dockerfile PHP y config de nginx
 
 ## Security Vulnerabilities
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+If you discover a security vulnerability within this project, please open a private issue. For the framework itself, refer to the [Laravel security policy](https://laravel.com/docs/security).
 
 ## License
 

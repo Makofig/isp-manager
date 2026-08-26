@@ -218,13 +218,8 @@ class clientController extends Controller
         // Si NO se envían año/mes → usar actuales
         $anio = request('anio') ?: now()->year; 
         $mes = request('mes') ?: now()->month; 
-        // debug 
-        // dd($anio, $mes); 
 
-        // $anio = $anio ?: now()->year;
-        // $mes  = $mes ?: now()->month;
-
-        $query = Client::query()->with('contract'); 
+        $query = Client::query()->with('contract', 'accessPoint'); 
 
         if ($type === 'banned') {
             $query->where('is_banned', 1); 
@@ -238,14 +233,16 @@ class clientController extends Controller
             });
         }
 
-        // === Filtro por año/mes para created_at ===
-        // $query->whereYear('created_at', $anio)
-        //     ->whereMonth('created_at', $mes);
-
         $clients = $query->get();
 
-        $pdf = Pdf::loadView('exports.clients', compact('clients', 'type', 'anio', 'mes'))
-            ->setPaper('a4', 'portrait'); 
+        $title = match($type) {
+            'banned'  => 'Banned Clients',
+            'debtors' => 'Debtors Clients',
+            default   => 'All Clients',
+        };
+
+        $pdf = Pdf::loadView('exports.clients', compact('clients', 'type', 'anio', 'mes', 'title'))
+            ->setPaper('a4', 'landscape'); 
 
         return $pdf->download("clients_{$type}_" . date('Ymd_His') . '.pdf');
     }
