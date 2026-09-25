@@ -29,7 +29,8 @@ if [ ! -f "$INIT_FILE" ]; then
     
     # Migrations + seed SOLO primera vez
     echo "🗄 Running migrations & seed..."
-    php artisan migrate --force --seed
+    php artisan migrate --force
+    php artisan db:seed --force || echo "⚠️ Seeder skipped (data already exists)"
     
     touch "$INIT_FILE"
     echo "✅ Initialization completed"
