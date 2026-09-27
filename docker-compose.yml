@@ -6,10 +6,10 @@ services:
     container_name: crm_mysql
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:?set DB_ROOT_PASSWORD in .env}
       MYSQL_DATABASE: intersys_laravel
       MYSQL_USER: laravel
-      MYSQL_PASSWORD: laravel
+      MYSQL_PASSWORD: ${DB_PASSWORD:?set DB_PASSWORD in .env}
     volumes:
       - mysql_data:/var/lib/mysql
     ports:
@@ -32,7 +32,7 @@ services:
       DB_PORT: 3306
       DB_DATABASE: intersys_laravel
       DB_USERNAME: laravel
-      DB_PASSWORD: laravel
+      DB_PASSWORD: ${DB_PASSWORD:?set DB_PASSWORD in .env}
       COMPOSER_ALLOW_SUPERUSER: 1
       QUEUE_CONNECTION: database
     depends_on:
