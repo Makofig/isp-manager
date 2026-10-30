@@ -1,11 +1,11 @@
 <x-app-layout>
-<x-page-header title="Update Payment" description="Client: {{ $payment->clients->nombre ?? 'N/A' }} {{ $payment->clients->apellido ?? '' }}" />
+<x-page-header title="Update Payment" description="Client: {{ $payment->clients?->nombre ?? 'N/A' }} {{ $payment->clients?->apellido ?? '' }}" />
 
     <div class="max-w-lg">
         <div class="stat-card mb-4">
             <div class="flex items-center justify-between">
                 <span class="text-[11px] font-medium text-muted uppercase tracking-wider">Price</span>
-                <span class="text-lg font-semibold text-text-primary">${{ number_format($payment->costo, 2) }}</span>
+                <span id="priceValue" data-price="{{ $payment->costo }}" class="text-lg font-semibold text-text-primary">${{ number_format($payment->costo, 2) }}</span>
             </div>
         </div>
 

@@ -51,7 +51,7 @@ class GenerateQuotaPayments implements ShouldQueue
                         'id_cliente' => $client->id,
                         'id_cuota' => $this->quotaId,
                         'num_cuotas' => now()->month,
-                        'costo' => $client->contract->costo ?? 0,
+                        'costo' => $client->contract?->costo ?? 0,
                         'abonado' => 0,
                         'estado' => 0,
                         'fecha_pago' => null,
@@ -76,8 +76,8 @@ class GenerateQuotaPayments implements ShouldQueue
         // Mark job as complete
         Cache::put("quota_progress_{$this->quotaId}", 100);
 
-        // Dispatch notification to admin users
-        $adminUser = User::first();
+        // Dispatch notification to admin users only
+        $adminUser = User::where('role', 'admin')->first();
         if ($adminUser) {
             $adminUser->notify(new QuotaGenerated($quota, $this->clientCount));
         }

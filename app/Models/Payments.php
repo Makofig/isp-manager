@@ -10,15 +10,14 @@ class Payments extends Model
     protected $table = 'pagos'; 
 
     protected $fillable = [
-        'id_cliente', 
-        'id_cuota', 
+        'id_cliente',
+        'id_cuota',
         'num_cuotas',
-        'costo', 
-        'abonado', 
-        'estado',
+        'costo',
+        'abonado',
         'fecha_pago',
         'comentario',
-        'image', 
+        'image',
         'image2'
     ]; 
 

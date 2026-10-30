@@ -26,7 +26,7 @@
         </div>
         <div class="flex items-center justify-between py-2 border-b border-dark-border">
             <span class="text-xs text-muted uppercase tracking-wider">Created</span>
-            <span class="text-sm text-text-secondary">{{ $payment->created_at->format('M d, Y') }}</span>
+            <span class="text-sm text-text-secondary">{{ $payment->created_at?->format('M d, Y') ?? '—' }}</span>
         </div>
         <div class="flex items-center justify-between py-2 border-b border-dark-border">
             <span class="text-xs text-muted uppercase tracking-wider">Payment Date</span>

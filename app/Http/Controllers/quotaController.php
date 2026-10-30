@@ -5,17 +5,22 @@ namespace App\Http\Controllers;
 use App\Models\Quota;
 use App\Services\QuotaGenerationService;
 use Illuminate\Http\Request;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Carbon\Carbon;
 
 class quotaController extends Controller
 {
+    use AuthorizesRequests;
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        // traer todas las cuotas y ordenar 
-        // sortBy ordena en memoria 
+        $this->authorize('viewAny', Quota::class);
+
+        // traer todas las cuotas y ordenar
+        // sortBy ordena en memoria
         //$quotas = Quota::all()->sortBy('created_at');
         $quotas = Quota::orderBy('created_at', 'desc')->paginate(10);
         return view('quota.index', compact('quotas'));
@@ -37,6 +42,8 @@ class quotaController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', Quota::class);
+
         $validated = $request->validate([
             'months_year' => 'required|date_format:F Y',
         ]);

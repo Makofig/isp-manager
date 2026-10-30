@@ -25,13 +25,15 @@ class DatabaseSeeder extends Seeder
            AdminUserSeeder::class,  
         ]);
 
-        User::firstOrCreate(
-            ['email' => 'test@example.com'],
-            [
-                'name' => 'Test User',
-                'password' => bcrypt('password'),
-                'email_verified_at' => now(),
-            ]
-        );
+        if (app()->environment('local', 'testing', 'staging')) {
+            User::firstOrCreate(
+                ['email' => 'test@example.com'],
+                [
+                    'name' => 'Test User',
+                    'password' => bcrypt('password'),
+                    'email_verified_at' => now(),
+                ]
+            );
+        }
     }
 }

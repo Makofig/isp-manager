@@ -74,7 +74,7 @@ class paymentController extends Controller
         // Armamos el array de actualización
         $data = [
             'abonado'    => $validated['amount'],
-            'estado'     => '1',
+            'estado'     => 1,
             'comentario' => $validated['coment'],
             'fecha_pago' => $validated['payment_date'],
         ];

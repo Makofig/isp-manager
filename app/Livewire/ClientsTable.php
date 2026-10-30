@@ -6,6 +6,7 @@ use Livewire\Component;
 use App\Models\Client;
 use App\Models\Contracts;
 use Livewire\WithPagination;
+use Illuminate\Support\Facades\Gate;
 
 class ClientsTable extends Component
 {
@@ -46,6 +47,8 @@ class ClientsTable extends Component
     public function toggleBan($id)
     {
         $client = Client::findOrFail($id);
+
+        Gate::authorize('ban', $client);
 
         $client->update([
             'is_banned' => !$client->is_banned

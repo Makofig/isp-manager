@@ -51,8 +51,8 @@ class RemindOverduePayments extends Command
         foreach ($overduePayments as $payment) {
             $daysOverdue = (int) $payment->created_at->diffInDays(now());
 
-            // Notify all admin users
-            $admins = User::all();
+            // Notify only admin users
+            $admins = User::where('role', 'admin')->get();
             foreach ($admins as $admin) {
                 $admin->notify(new PaymentOverdue(
                     clientId: $payment->id_cliente,

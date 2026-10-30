@@ -16,7 +16,7 @@
                 @foreach($payments as $payment)
                 <tr class="hover:bg-dark-elevated/50 transition-colors duration-150">
                     <td class="px-4 py-3.5">
-                        <span class="text-sm text-text-primary">{{ $payment->cuota->created_at->format('M d, Y') }}</span>
+                        <span class="text-sm text-text-primary">{{ $payment->cuota?->created_at?->format('M d, Y') ?? '—' }}</span>
                     </td>
                     <td class="px-4 py-3.5">
                         <span class="text-sm text-text-secondary">${{ number_format($payment->costo, 2) }}</span>

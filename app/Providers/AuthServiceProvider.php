@@ -6,10 +6,12 @@ use App\Models\Client;
 use App\Models\Contracts;
 use App\Models\Access_Point;
 use App\Models\Payments;
+use App\Models\Quota;
 use App\Policies\ClientPolicy;
 use App\Policies\ContractPolicy;
 use App\Policies\AccessPointPolicy;
 use App\Policies\PaymentPolicy;
+use App\Policies\QuotaPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -25,6 +27,7 @@ class AuthServiceProvider extends ServiceProvider
         Contracts::class => ContractPolicy::class,
         Access_Point::class => AccessPointPolicy::class,
         Payments::class => PaymentPolicy::class,
+        Quota::class => QuotaPolicy::class,
     ];
 
     /**
