@@ -11,6 +11,7 @@
 |-------|--------|------|
 | Phase 1 — Security | ✅ DONE | 2026-10-30 (`f5f8d8c`) |
 | Phase 2 — Architecture | ✅ DONE | 2026-10-30 (`cae320e`) |
+| Medium fixes | ✅ DONE | 2026-10-30 (`fdf38b4`) |
 | Phase 3 — Product Maturity | ⏳ Pending | — |
 
 ---

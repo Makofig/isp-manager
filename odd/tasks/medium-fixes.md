@@ -14,11 +14,12 @@ S19: Optimize Statistics Livewire queries with eager loading + cache (2.3)
 
 ## Tasks
 
-- [ ] T13: Fix Dashboard cache key typo — `stast` → `stats` (inline) — S16
-- [ ] T14: Validate MIME type of uploaded files (inline) — S17
-- [ ] T15: Add role constants to User model and update Policies (inline) — S18
-- [ ] T16: Optimize Statistics queries (inline) — S19
+- [x] T13: Fix Dashboard cache key typo — `stast` → `stats` (inline) — S16 — commit `fdf38b4`
+- [x] T14: Validate MIME type of uploaded files (inline) — S17 — commit `fdf38b4`
+- [x] T15: Add role constants to Policies (inline) — S18 — commit `fdf38b4`
+- [x] T16: Optimize Statistics queries with cache + consolidated selectRaw (inline) — S19 — commit `fdf38b4`
 
 ## Log
 
 L1: User requested closing all Medium priority findings from audit.
+L2: [2026-10-30] ALL 4 tasks COMPLETE. Commit: fdf38b4. Dashboard cache typo fixed. MIME validation added to uploads. 5 Policies now use User::ROLE_* constants. Statistics optimized from ~9 queries to 4 + 30min cache. Tests verified: 0 regressions.
