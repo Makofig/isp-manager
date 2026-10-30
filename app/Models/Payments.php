@@ -21,10 +21,10 @@ class Payments extends Model
         'image2'
     ]; 
 
-    // Relación con el modelo de cliente uno a muchos 
+    // Relación con el modelo de cliente uno a muchos
     public function clients()
     {
-        return $this->belongsTo(Client::class, 'id_cliente');
+        return $this->belongsTo(Client::class, 'id_cliente')->withTrashed();
     }
     // Relación con el modelo de cuotas uno a muchos
     public function cuota()

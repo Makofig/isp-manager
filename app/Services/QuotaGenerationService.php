@@ -32,9 +32,10 @@ class QuotaGenerationService
         }
 
         return DB::transaction(function () use ($year, $month) {
-            // Check if quota already exists for this month
+            // Check if quota already exists for this month and year
             // lockForUpdate prevents race conditions
             $existing = Quota::where('numero', $month)
+                ->where('year', $year)
                 ->lockForUpdate()
                 ->first();
 
@@ -53,6 +54,7 @@ class QuotaGenerationService
             // Create the quota FIRST (before any payments)
             $quota = Quota::create([
                 'numero' => $month,
+                'year' => $year,
             ]);
 
             Log::info("Cuota creada para mes {$month}/{$year}", [

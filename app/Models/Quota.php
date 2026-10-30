@@ -10,7 +10,8 @@ class Quota extends Model
     protected $table = 'cuotas';
 
     protected $fillable = [
-        'numero'
+        'numero',
+        'year',
     ];
 
     // Relación con el modelo de pagos uno a muchos

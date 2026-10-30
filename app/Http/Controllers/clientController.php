@@ -8,6 +8,7 @@ use App\Models\Access_Point;
 use App\Models\Payments;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Barryvdh\DomPDF\Facade\Pdf;
 
@@ -87,7 +88,7 @@ class clientController extends Controller
         ]);
         // Guardar imagen si viene en la petición
         if ($request->hasFile('file_upload')) {
-            $nombreImagen = time() . '.' . $request->file_upload->extension();
+            $nombreImagen = Str::uuid() . '.' . $request->file_upload->extension();
             $request->file_upload->storeAs('clients', $nombreImagen, 'public'); // carpeta storage/app/public/clients
             $validated['imagen'] = $nombreImagen; // Guardamos solo el nombre en DB
         }
@@ -171,7 +172,7 @@ class clientController extends Controller
             }
 
             // Guardar nueva
-            $nombreImagen = time() . '.' . $request->file_upload->extension();
+            $nombreImagen = Str::uuid() . '.' . $request->file_upload->extension();
             $request->file_upload->storeAs('clients', $nombreImagen, 'public');
             $validated['imagen'] = $nombreImagen;
         } else {

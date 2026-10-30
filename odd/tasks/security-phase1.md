@@ -20,15 +20,16 @@ S10: Change migration default role from `'admin'` to `'operator'`
 
 ## Tasks
 
-- [ ] T1: Change default role to `operator` — migration + fortify config (inline) — S1, S10
-- [ ] T2: Enable email verification — fortify config (inline) — S2
-- [ ] T3: Remove `estado` from Payments `$fillable` (inline) — S3
-- [ ] T4: Add authorization to QuotaController + wire QuotaPolicy in AuthServiceProvider + add ban auth to ClientsTable (inline) — S4, S5
-- [ ] T5: Guard test user in DatabaseSeeder for production (inline) — S6
-- [ ] T6: Add security headers to Nginx (inline) — S7
-- [ ] T7: Filter admin notifications by role in commands/jobs (inline) — S8
-- [ ] T8: Set Sanctum token expiration (inline) — S9
+- [x] T1: Change default role to `operator` — migration + fortify config (inline) — S1, S10 — `2026_10_30_171121_change_default_user_role_to_operator.php`, `config/fortify.php` — commit `f5f8d8c`
+- [x] T2: Enable email verification — fortify config (inline) — S2 — `config/fortify.php`
+- [x] T3: Remove `estado` from Payments `$fillable` (inline) — S3 — `app/Models/Payments.php`
+- [x] T4: Add authorization to QuotaController + wire QuotaPolicy in AuthServiceProvider + add ban auth to ClientsTable (inline) — S4, S5 — `quotaController.php`, `AuthServiceProvider.php`, `ClientsTable.php`
+- [x] T5: Guard test user in DatabaseSeeder for production (inline) — S6 — `database/seeders/DatabaseSeeder.php`
+- [x] T6: Add security headers to Nginx (inline) — S7 — `docker/nginx/default.conf`
+- [x] T7: Filter admin notifications by role in commands/jobs (inline) — S8 — `GenerateQuotaPayments.php`, `RemindOverduePayments.php`
+- [x] T8: Set Sanctum token expiration (inline) — S9 — `config/sanctum.php`
 
 ## Log
 
 L1: User requested implementing Phase 1 security fixes from audit (docs/AUDIT.md). Each task should be marked as completed with evidence.
+L2: [2026-10-30] Phase 1 COMPLETE — All 10 security specs (S1-S10) implemented across 8 tasks. Commit: security-phase1-initial. New migration created for role default change. Nginx security headers added. Fortify self-registration disabled, email verification enabled. Payments mass assignment vulnerability patched. Authorization added to QuotaController and toggleBan. Admin role filter applied to notification commands/jobs. Sanctum 30-day expiration set. Docs: docs/AUDIT.md updated.
