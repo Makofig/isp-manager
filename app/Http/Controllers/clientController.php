@@ -72,7 +72,7 @@ class clientController extends Controller
             'contracts_id' => 'required|exists:plan,id',
             'access_point_id' => 'required|exists:accespoint,id',
             'street_address' => 'required|string|max:255',
-            'file_upload' => 'nullable|image|max:2048',
+            'file_upload' => 'nullable|image|mimetypes:image/jpeg,image/png,image/webp|max:2048',
         ], [
             // Mensajes personalizados
             'first_name.required'      => 'The name cannot be empty.',
@@ -149,7 +149,7 @@ class clientController extends Controller
             'contracts_id' => 'required|exists:plan,id',
             'access_point_id' => 'required|exists:accespoint,id',
             'street_address' => 'required|string|max:255',
-            'file_upload' => 'nullable|image|max:2048',
+            'file_upload' => 'nullable|image|mimetypes:image/jpeg,image/png,image/webp|max:2048',
         ], [
             // Mensajes personalizados
             'first_name.required'      => 'The name cannot be empty.',

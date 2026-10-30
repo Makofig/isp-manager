@@ -12,7 +12,7 @@ class ClientPolicy
      */
     public function viewAny(User $user): bool
     {
-        return in_array($user->role, ['admin', 'operator', 'auditor']);
+        return in_array($user->role, [User::ROLE_ADMIN, User::ROLE_OPERATOR, User::ROLE_AUDITOR]);
     }
 
     /**
@@ -20,7 +20,7 @@ class ClientPolicy
      */
     public function view(User $user, Client $client): bool
     {
-        return in_array($user->role, ['admin', 'operator', 'auditor']);
+        return in_array($user->role, [User::ROLE_ADMIN, User::ROLE_OPERATOR, User::ROLE_AUDITOR]);
     }
 
     /**
@@ -28,7 +28,7 @@ class ClientPolicy
      */
     public function create(User $user): bool
     {
-        return in_array($user->role, ['admin', 'operator']);
+        return in_array($user->role, [User::ROLE_ADMIN, User::ROLE_OPERATOR]);
     }
 
     /**
@@ -36,7 +36,7 @@ class ClientPolicy
      */
     public function update(User $user, Client $client): bool
     {
-        return in_array($user->role, ['admin', 'operator']);
+        return in_array($user->role, [User::ROLE_ADMIN, User::ROLE_OPERATOR]);
     }
 
     /**
@@ -44,7 +44,7 @@ class ClientPolicy
      */
     public function delete(User $user, Client $client): bool
     {
-        return $user->role === 'admin';
+        return $user->role === User::ROLE_ADMIN;
     }
 
     /**
@@ -52,6 +52,6 @@ class ClientPolicy
      */
     public function ban(User $user, Client $client): bool
     {
-        return in_array($user->role, ['admin', 'operator']);
+        return in_array($user->role, [User::ROLE_ADMIN, User::ROLE_OPERATOR]);
     }
 }

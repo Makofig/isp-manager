@@ -11,7 +11,7 @@ class QuotaPolicy
      */
     public function viewAny(User $user): bool
     {
-        return in_array($user->role, ['admin', 'operator', 'auditor']);
+        return in_array($user->role, [User::ROLE_ADMIN, User::ROLE_OPERATOR, User::ROLE_AUDITOR]);
     }
 
     /**
@@ -19,7 +19,7 @@ class QuotaPolicy
      */
     public function view(User $user): bool
     {
-        return in_array($user->role, ['admin', 'operator', 'auditor']);
+        return in_array($user->role, [User::ROLE_ADMIN, User::ROLE_OPERATOR, User::ROLE_AUDITOR]);
     }
 
     /**
@@ -27,7 +27,7 @@ class QuotaPolicy
      */
     public function create(User $user): bool
     {
-        return in_array($user->role, ['admin', 'operator']);
+        return in_array($user->role, [User::ROLE_ADMIN, User::ROLE_OPERATOR]);
     }
 
     /**
@@ -35,6 +35,6 @@ class QuotaPolicy
      */
     public function delete(User $user): bool
     {
-        return $user->role === 'admin';
+        return $user->role === User::ROLE_ADMIN;
     }
 }

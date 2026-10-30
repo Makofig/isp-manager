@@ -22,7 +22,7 @@ class Dashboard extends Component
     public $totalMegabytesUsed; 
 
     public function cacheData() {
-        return cache()->remember('stast_global', 30, function() {
+        return cache()->remember('stats_global', 30, function() {
             return [
                 'totalClients' => Client::count(),
                 'totalPayments' => Payments::count(),

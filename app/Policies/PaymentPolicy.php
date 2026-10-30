@@ -12,7 +12,7 @@ class PaymentPolicy
      */
     public function viewAny(User $user): bool
     {
-        return in_array($user->role, ['admin', 'operator', 'auditor']);
+        return in_array($user->role, [User::ROLE_ADMIN, User::ROLE_OPERATOR, User::ROLE_AUDITOR]);
     }
 
     /**
@@ -20,7 +20,7 @@ class PaymentPolicy
      */
     public function view(User $user, Payments $payment): bool
     {
-        return in_array($user->role, ['admin', 'operator', 'auditor']);
+        return in_array($user->role, [User::ROLE_ADMIN, User::ROLE_OPERATOR, User::ROLE_AUDITOR]);
     }
 
     /**
@@ -28,7 +28,7 @@ class PaymentPolicy
      */
     public function update(User $user, Payments $payment): bool
     {
-        return in_array($user->role, ['admin', 'operator']);
+        return in_array($user->role, [User::ROLE_ADMIN, User::ROLE_OPERATOR]);
     }
 
     /**
@@ -36,6 +36,6 @@ class PaymentPolicy
      */
     public function delete(User $user, Payments $payment): bool
     {
-        return $user->role === 'admin';
+        return $user->role === User::ROLE_ADMIN;
     }
 }

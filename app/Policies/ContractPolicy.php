@@ -12,7 +12,7 @@ class ContractPolicy
      */
     public function viewAny(User $user): bool
     {
-        return in_array($user->role, ['admin', 'operator', 'auditor']);
+        return in_array($user->role, [User::ROLE_ADMIN, User::ROLE_OPERATOR, User::ROLE_AUDITOR]);
     }
 
     /**
@@ -20,7 +20,7 @@ class ContractPolicy
      */
     public function view(User $user, Contracts $contract): bool
     {
-        return in_array($user->role, ['admin', 'operator', 'auditor']);
+        return in_array($user->role, [User::ROLE_ADMIN, User::ROLE_OPERATOR, User::ROLE_AUDITOR]);
     }
 
     /**
@@ -28,7 +28,7 @@ class ContractPolicy
      */
     public function create(User $user): bool
     {
-        return in_array($user->role, ['admin', 'operator']);
+        return in_array($user->role, [User::ROLE_ADMIN, User::ROLE_OPERATOR]);
     }
 
     /**
@@ -36,7 +36,7 @@ class ContractPolicy
      */
     public function update(User $user, Contracts $contract): bool
     {
-        return in_array($user->role, ['admin', 'operator']);
+        return in_array($user->role, [User::ROLE_ADMIN, User::ROLE_OPERATOR]);
     }
 
     /**
@@ -44,6 +44,6 @@ class ContractPolicy
      */
     public function delete(User $user, Contracts $contract): bool
     {
-        return $user->role === 'admin';
+        return $user->role === User::ROLE_ADMIN;
     }
 }
