@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 // Import controladores 
+use App\Http\Controllers\HealthController;
 use App\Http\Controllers\clientController; 
 use App\Http\Controllers\contractController;
 use App\Http\Controllers\access_pointController;
@@ -10,6 +11,9 @@ use App\Http\Controllers\paymentController;
 use App\Http\Controllers\quotaController;
 use App\Http\Controllers\NotificationController;
 use App\Livewire\QuotaCreate;
+
+// Health check — public, no auth required
+Route::get('/health', HealthController::class)->name('health');
 
 Route::get('/', function () {
     return view('welcome');

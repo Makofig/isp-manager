@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Contracts extends Model
 {
+    use HasFactory;
+
     // nombre de la tabla 
     protected $table = 'plan'; 
 

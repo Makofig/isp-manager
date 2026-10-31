@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Payments extends Model
 {
+    use HasFactory;
+
     // Nombre de la tabla 
     protected $table = 'pagos'; 
 
@@ -20,6 +23,13 @@ class Payments extends Model
         'image',
         'image2'
     ]; 
+
+    protected function casts(): array
+    {
+        return [
+            'fecha_pago' => 'datetime',
+        ];
+    }
 
     // Relación con el modelo de cliente uno a muchos
     public function clients()

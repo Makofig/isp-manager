@@ -74,7 +74,6 @@ class paymentController extends Controller
         // Armamos el array de actualización
         $data = [
             'abonado'    => $validated['amount'],
-            'estado'     => 1,
             'comentario' => $validated['coment'],
             'fecha_pago' => $validated['payment_date'],
         ];
@@ -87,8 +86,12 @@ class paymentController extends Controller
             $data['image'] = $path;
         }
 
-        // Actualizar
+        // Actualizar (estado is not in $fillable to prevent mass assignment,
+        // so we set it explicitly below instead of through the validated array)
         $payment->update($data);
+
+        // Explicitly set estado (not through mass assignment, use forceFill)
+        $payment->forceFill(['estado' => 1])->save();
 
         return redirect()->route('clients.show', $payment->id_cliente)->with('success', 'Payment updated successfully.');
     }

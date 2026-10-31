@@ -18,8 +18,10 @@ $navItems = [
     ],
 ];
 
-function isActiveRoute($route) {
-    return request()->routeIs($route);
+if (!function_exists('isActiveRoute')) {
+    function isActiveRoute($route) {
+        return request()->routeIs($route);
+    }
 }
 @endphp
 

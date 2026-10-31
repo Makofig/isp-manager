@@ -22,7 +22,7 @@ class ClientsTable extends Component
     
      // Esto hace que search e id_plan estén en el query string
     protected $queryString = [
-        'search' => ['except' => ''],
+        'search' => ['except' => '', 'debounce' => 300],
         'id_plan' => ['except' => null],
     ];
 
