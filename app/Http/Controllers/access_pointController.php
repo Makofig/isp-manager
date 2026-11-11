@@ -3,13 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Access_Point;
-use Illuminate\Http\Request;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Models\Client;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\Request;
 
 class access_pointController extends Controller
 {
     use AuthorizesRequests;
+
     /**
      * Display a listing of the resource.
      */
@@ -17,7 +18,8 @@ class access_pointController extends Controller
     {
         $this->authorize('viewAny', Access_Point::class);
 
-        $points = Access_Point::paginate(10); 
+        $points = Access_Point::paginate(10);
+
         return view('access-point.index', compact('points'));
     }
 
@@ -38,13 +40,13 @@ class access_pointController extends Controller
     {
         $this->authorize('create', Access_Point::class);
 
-        // Recuperar los datos para guardarlos 
+        // Recuperar los datos para guardarlos
         $validated = $request->validate([
             'ssid' => 'required|string|max:255',
             'frequency' => 'required|string|max:100',
             'ip_address' => 'nullable|ip',
             'location' => 'required|string|max:255',
-        ],[
+        ], [
             'ssid.required' => 'The SSID is required.',
             'frequency.required' => 'Frequency is mandatory.',
             'ip_address.ip' => 'The IP address must be valid.',
@@ -66,9 +68,9 @@ class access_pointController extends Controller
      */
     public function show(string $id)
     {
-        // mostrar la información de un Access Point 
+        // mostrar la información de un Access Point
         $access_point = Access_Point::findOrFail($id);
-        $clients = $access_point->clients()->paginate(10); 
+        $clients = $access_point->clients()->paginate(10);
 
         return view('access-point.show', compact('access_point', 'clients'));
     }
@@ -92,13 +94,13 @@ class access_pointController extends Controller
         $access_point = Access_Point::findOrFail($id);
         $this->authorize('update', $access_point);
 
-        // Recibimos los datos del contrato para guardarlos 
-        $validated= $request->validate([
+        // Recibimos los datos del contrato para guardarlos
+        $validated = $request->validate([
             'ssid' => 'required|string|max:255',
             'frequency' => 'required|string|max:100',
             'ip_address' => 'nullable|ip',
             'location' => 'required|string|max:255',
-        ],[
+        ], [
             'ssid.required' => 'The SSID is required.',
             'frequency.required' => 'Frequency is mandatory.',
             'ip_address.ip' => 'The IP address must be valid.',
@@ -132,7 +134,6 @@ class access_pointController extends Controller
                 ->route('access-point')
                 ->with('error', "Cannot delete access point {$point->ssid} because it has associated {$clientsCount} clients.");
         }
-
 
         $point->delete();
 

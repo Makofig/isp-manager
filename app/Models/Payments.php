@@ -2,15 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Payments extends Model
 {
     use HasFactory;
 
-    // Nombre de la tabla 
-    protected $table = 'pagos'; 
+    // Nombre de la tabla
+    protected $table = 'pagos';
 
     protected $fillable = [
         'id_cliente',
@@ -21,8 +21,8 @@ class Payments extends Model
         'fecha_pago',
         'comentario',
         'image',
-        'image2'
-    ]; 
+        'image2',
+    ];
 
     protected function casts(): array
     {
@@ -36,6 +36,7 @@ class Payments extends Model
     {
         return $this->belongsTo(Client::class, 'id_cliente')->withTrashed();
     }
+
     // Relación con el modelo de cuotas uno a muchos
     public function cuota()
     {

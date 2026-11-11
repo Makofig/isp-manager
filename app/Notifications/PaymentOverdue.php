@@ -5,9 +5,9 @@ namespace App\Notifications;
 use App\Mail\PaymentOverdueMail;
 use App\Models\Payments;
 use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
+use Illuminate\Notifications\Notification;
 
 class PaymentOverdue extends Notification implements ShouldQueue
 {

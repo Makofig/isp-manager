@@ -2,11 +2,9 @@
 
 namespace App\Livewire;
 
-use Livewire\Component;
-use App\Models\Quota;
-use App\Jobs\GenerateQuotaPayments;
 use App\Services\QuotaGenerationService;
 use Carbon\Carbon;
+use Livewire\Component;
 
 class QuotaCreate extends Component
 {
@@ -16,7 +14,7 @@ class QuotaCreate extends Component
     public $loading = false;
     public $progress = 0;
     public $quotaId;
-    public $status  = 'processing';
+    public $status = 'processing';
 
     protected $listeners = ['execute-save' => 'save'];
 
@@ -50,6 +48,7 @@ class QuotaCreate extends Component
 
         if (! $result['created']) {
             $this->addError('months_year', $result['message']);
+
             return;
         }
 
@@ -73,9 +72,9 @@ class QuotaCreate extends Component
         //     session()->flash('success', 'Fee issued successfully.');
         // }
         if ($this->progress >= 100 && $this->status !== 'success') {
-            $this->status = 'success'; 
-            // $this->loading = false; 
-            $this->dispatch('quota-finished'); 
+            $this->status = 'success';
+            // $this->loading = false;
+            $this->dispatch('quota-finished');
         }
     }
 

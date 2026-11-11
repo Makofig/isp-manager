@@ -3,7 +3,6 @@
 namespace App\Livewire;
 
 use Livewire\Component;
-use Illuminate\Notifications\DatabaseNotification;
 
 class NotificationsBell extends Component
 {

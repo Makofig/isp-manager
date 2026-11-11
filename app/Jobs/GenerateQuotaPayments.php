@@ -20,8 +20,8 @@ class GenerateQuotaPayments implements ShouldQueue
     /**
      * Create a new job instance.
      *
-     * @param int $quotaId The ID of the quota to generate payments for
-     * @param int $clientCount Total number of clients (for notification payload)
+     * @param  int  $quotaId  The ID of the quota to generate payments for
+     * @param  int  $clientCount  Total number of clients (for notification payload)
      */
     public function __construct(
         public int $quotaId,

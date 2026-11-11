@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Database\Seeders\AdminUserSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -22,7 +21,7 @@ class DatabaseSeeder extends Seeder
         // ]);
 
         $this->call([
-           AdminUserSeeder::class,  
+            AdminUserSeeder::class,
         ]);
 
         if (app()->environment('local', 'testing', 'staging')) {

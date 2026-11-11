@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Quota;
 use App\Services\QuotaGenerationService;
-use Illuminate\Http\Request;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Carbon\Carbon;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\Request;
 
 class quotaController extends Controller
 {
@@ -21,8 +21,9 @@ class quotaController extends Controller
 
         // traer todas las cuotas y ordenar
         // sortBy ordena en memoria
-        //$quotas = Quota::all()->sortBy('created_at');
+        // $quotas = Quota::all()->sortBy('created_at');
         $quotas = Quota::orderBy('created_at', 'desc')->paginate(10);
+
         return view('quota.index', compact('quotas'));
     }
 

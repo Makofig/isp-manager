@@ -2,24 +2,25 @@
 
 namespace App\Livewire;
 
-use Livewire\Component;
-use Livewire\WithPagination;
 use App\Models\Quota;
 use Illuminate\Support\Facades\DB;
+use Livewire\Component;
+use Livewire\WithPagination;
 
 class QuotaTable extends Component
 {
-    use WithPagination; 
+    use WithPagination;
 
     protected $paginationTheme = 'tailwind';
 
     public $search = '';
 
     public function updatedSearch($value)
-    {   
+    {
         $this->search = strtolower(preg_replace('/\s+/', ' ', trim($value)));
         $this->resetPage();
     }
+
     /*
     public function filterBySearch($filterSearch)
     {
@@ -28,7 +29,7 @@ class QuotaTable extends Component
     */
     public function render()
     {
-        // buscar por el año y mes 
+        // buscar por el año y mes
         $quotas = Quota::when($this->search, function ($query) {
             $query->where(DB::raw('YEAR(created_at)'), 'like', '%' . $this->search . '%')
                 ->orWhere(DB::raw('MONTH(created_at)'), 'like', '%' . $this->search . '%');

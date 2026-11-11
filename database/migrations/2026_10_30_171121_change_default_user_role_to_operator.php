@@ -16,8 +16,8 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->enum('role', ['admin', 'operator', 'auditor'])
-                  ->default('operator')
-                  ->change();
+                ->default('operator')
+                ->change();
         });
     }
 
@@ -28,8 +28,8 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->enum('role', ['admin', 'operator', 'auditor'])
-                  ->default('admin')
-                  ->change();
+                ->default('admin')
+                ->change();
         });
     }
 };

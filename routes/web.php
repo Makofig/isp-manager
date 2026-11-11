@@ -1,16 +1,15 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-
-// Import controladores 
-use App\Http\Controllers\HealthController;
-use App\Http\Controllers\clientController; 
-use App\Http\Controllers\contractController;
 use App\Http\Controllers\access_pointController;
+// Import controladores
+use App\Http\Controllers\clientController;
+use App\Http\Controllers\contractController;
+use App\Http\Controllers\HealthController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\paymentController;
 use App\Http\Controllers\quotaController;
-use App\Http\Controllers\NotificationController;
 use App\Livewire\QuotaCreate;
+use Illuminate\Support\Facades\Route;
 
 // Health check — public, no auth required
 Route::get('/health', HealthController::class)->name('health');
@@ -29,12 +28,12 @@ Route::middleware([
     })->name('dashboard');
 });
 
-// Rutas de los clientes 
+// Rutas de los clientes
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
     'verified',
-    'throttle:auth-users', 
+    'throttle:auth-users',
 ])->prefix('clients')->group(function () {
     Route::get('/', [clientController::class, 'index'])->name('clients');
     Route::get('/create', [clientController::class, 'create'])->name('clients.create');
@@ -48,7 +47,7 @@ Route::middleware([
     Route::get('/debtors', [clientController::class, 'debtors'])->name('debtors');
 });
 
-// Ruta de los access points 
+// Ruta de los access points
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
@@ -62,9 +61,9 @@ Route::middleware([
     Route::get('/edit/{id}', [access_pointController::class, 'edit'])->name('access-point.edit');
     Route::put('/update/{id}', [access_pointController::class, 'update'])->name('access-point.update');
     Route::delete('/destroy/{id}', [access_pointController::class, 'destroy'])->name('access-point.destroy');
-});  
+});
 
-// Ruta de los planes 
+// Ruta de los planes
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
@@ -79,7 +78,7 @@ Route::middleware([
     Route::delete('/destroy/{id}', [contractController::class, 'destroy'])->name('contracts.destroy');
 });
 
-// Rutas de las cuotas 
+// Rutas de las cuotas
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
@@ -88,11 +87,11 @@ Route::middleware([
 ])->prefix('quota')->group(function () {
     Route::get('/', [quotaController::class, 'index'])->name('quota');
     Route::get('/create', QuotaCreate::class)->name('quota.create');
-    #Route::get('/create', [quotaController::class, 'create'])->name('quota.create');
+    // Route::get('/create', [quotaController::class, 'create'])->name('quota.create');
     Route::post('/store', [quotaController::class, 'store'])->name('quota.store');
 });
 
-// Rutas de los pagos 
+// Rutas de los pagos
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),

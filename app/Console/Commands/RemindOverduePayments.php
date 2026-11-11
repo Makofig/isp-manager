@@ -43,6 +43,7 @@ class RemindOverduePayments extends Command
 
         if ($overduePayments->isEmpty()) {
             $this->info("No se encontraron pagos vencidos con más de {$days} días.");
+
             return Command::SUCCESS;
         }
 
@@ -68,7 +69,7 @@ class RemindOverduePayments extends Command
             $this->info("Notificado: {$clientName} - {$daysOverdue} días - \${$payment->costo}");
         }
 
-        Log::info("Payment overdue notifications sent", [
+        Log::info('Payment overdue notifications sent', [
             'count' => $count,
             'min_days' => $days,
         ]);

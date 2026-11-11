@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Access_Point extends Model
 {
@@ -16,7 +16,7 @@ class Access_Point extends Model
         'ssid',
         'frecuencia',
         'ip_ap',
-        'localidad'
+        'localidad',
     ];
 
     // Relación con el modelo de clientes uno a muchos

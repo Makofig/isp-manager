@@ -5,9 +5,9 @@ namespace App\Notifications;
 use App\Mail\ClientSuspendedMail;
 use App\Models\Client;
 use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
+use Illuminate\Notifications\Notification;
 
 class ClientSuspended extends Notification implements ShouldQueue
 {

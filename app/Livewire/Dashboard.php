@@ -2,12 +2,10 @@
 
 namespace App\Livewire;
 
-use Livewire\Component;
 use App\Models\Client;
-use App\Models\Quota;
 use App\Models\Payments;
-use App\Models\Contracts;
 use Illuminate\Support\Facades\DB;
+use Livewire\Component;
 
 class Dashboard extends Component
 {
@@ -19,10 +17,11 @@ class Dashboard extends Component
     public $paymentStatuses;
     public $topDebtors;
     public $topPayers;
-    public $totalMegabytesUsed; 
+    public $totalMegabytesUsed;
 
-    public function cacheData() {
-        return cache()->remember('stats_global', 30, function() {
+    public function cacheData()
+    {
+        return cache()->remember('stats_global', 30, function () {
             return [
                 'totalClients' => Client::count(),
                 'totalPayments' => Payments::count(),
@@ -34,12 +33,12 @@ class Dashboard extends Component
                     ->groupBy('month')
                     ->orderBy('month')
                     ->get()
-                    ->mapWithKeys(fn($row) => [
+                    ->mapWithKeys(fn ($row) => [
                         $row->month => [
                             'totalCuotas' => $row->totalCuotas,
                             'totalPagado' => $row->totalPagado,
                             'deuda' => $row->totalCuotas - $row->totalPagado,
-                        ]
+                        ],
                     ])
                     ->toArray(),
                 'paymentStatuses' => Payments::select('estado', DB::raw('count(*) as total'))
@@ -54,30 +53,28 @@ class Dashboard extends Component
                     ->get()
                     ->toArray(),
                 'topPayers' => Client::withSum(['pagos as total_paid' => function ($q) {
-                        $q->where('estado', 1); // Solo pagos confirmados
-                    }], 'abonado')
+                    $q->where('estado', 1); // Solo pagos confirmados
+                }], 'abonado')
                     ->orderByDesc('total_paid')
                     ->take(5)
                     ->get()
                     ->toArray(),
-            ]; 
-        }); 
+            ];
+        });
     }
 
     public function mount()
     {
-        
         $data = $this->cacheData();
 
         foreach ($data as $key => $value) {
-             $this->$key = $value; 
+            $this->$key = $value;
         }
 
         $this->dispatch('refreshCharts', [
             'paymentsPerMonth' => $this->paymentsPerMonth,
             'paymentStatuses' => $this->paymentStatuses,
         ]);
-       
     }
 
     public function render()

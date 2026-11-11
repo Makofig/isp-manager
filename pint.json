@@ -9,7 +9,7 @@
             "sort_algorithm": "alpha"
         },
         "single_quote": true,
-        "trailing_comma_multiline": true,
+        "trailing_comma_in_multiline": true,
         "no_extra_blank_lines": {
             "tokens": [
                 "curly_brace_block",

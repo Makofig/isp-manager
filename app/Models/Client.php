@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Client extends Model
@@ -11,11 +11,11 @@ class Client extends Model
     // borrado lógico
     use HasFactory;
     use SoftDeletes;
-    
-    // Nombre de la tabla 
-    protected $table = 'cliente'; 
 
-    // Clave primaria solo si no es id 
+    // Nombre de la tabla
+    protected $table = 'cliente';
+
+    // Clave primaria solo si no es id
     // protected $primaryKey = 'id_cliente';
 
     // si no se usa timestamps (created_at / updated_at)
@@ -31,19 +31,21 @@ class Client extends Model
         'telefono',
         'ip',
         'imagen',
-        'is_banned'
-    ]; 
+        'is_banned',
+    ];
 
-    // Relación con el modelo de contratos uno a uno. 
+    // Relación con el modelo de contratos uno a uno.
     public function contract()
     {
         return $this->belongsTo(Contracts::class, 'id_plan');
     }
+
     // Relación con el modelo de pagos uno a muchos.
     public function pagos()
     {
         return $this->hasMany(Payments::class, 'id_cliente');
     }
+
     // Relación con el modelo de puntos de acceso uno a uno.
     public function accessPoint()
     {

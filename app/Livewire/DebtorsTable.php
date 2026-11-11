@@ -2,9 +2,8 @@
 
 namespace App\Livewire;
 
-use Livewire\Component;
 use App\Models\Client;
-use APP\Models\Payments;
+use Livewire\Component;
 use Livewire\WithPagination;
 
 class DebtorsTable extends Component
@@ -21,7 +20,7 @@ class DebtorsTable extends Component
     {
         // Por defecto: año y mes actual
         $this->anio = now()->year;
-        $this->mes  = now()->month;
+        $this->mes = now()->month;
     }
 
     public function updatedAnio($value)
@@ -47,7 +46,7 @@ class DebtorsTable extends Component
         return redirect()->route('clients.export', [
             'type' => 'debtors',
             'anio' => $this->anio,
-            'mes'  => $this->mes,
+            'mes' => $this->mes,
         ]);
     }
 

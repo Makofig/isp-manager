@@ -12,6 +12,7 @@ class TestInput extends Component
     {
         logger("Nuevo valor: $value");
     }
+
     public function render()
     {
         return view('livewire.test-input');

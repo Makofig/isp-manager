@@ -2,9 +2,9 @@
 
 namespace Tests\Feature;
 
+use App\Models\Access_Point;
 use App\Models\Client;
 use App\Models\Contracts;
-use App\Models\Access_Point;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;

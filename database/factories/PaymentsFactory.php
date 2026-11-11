@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
-use App\Models\Payments;
 use App\Models\Client;
+use App\Models\Payments;
 use App\Models\Quota;
 use Illuminate\Database\Eloquent\Factories\Factory;
 

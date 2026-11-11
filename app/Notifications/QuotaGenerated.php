@@ -2,12 +2,12 @@
 
 namespace App\Notifications;
 
-use App\Models\Quota;
 use App\Mail\QuotaGeneratedMail;
+use App\Models\Quota;
 use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
+use Illuminate\Notifications\Notification;
 
 class QuotaGenerated extends Notification implements ShouldQueue
 {

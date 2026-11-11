@@ -2,8 +2,8 @@
 
 namespace Tests\Feature;
 
-use App\Models\Payments;
 use App\Models\Client;
+use App\Models\Payments;
 use App\Models\Quota;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;

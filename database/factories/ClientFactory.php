@@ -2,9 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Models\Access_Point;
 use App\Models\Client;
 use App\Models\Contracts;
-use App\Models\Access_Point;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class ClientFactory extends Factory

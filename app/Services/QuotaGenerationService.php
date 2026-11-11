@@ -19,9 +19,10 @@ class QuotaGenerationService
      * - Quota must exist BEFORE generating payments
      * - If quota already exists, no action is taken
      *
-     * @param int $year The year (e.g. 2025)
-     * @param int $month The month (1-12)
+     * @param  int  $year  The year (e.g. 2025)
+     * @param  int  $month  The month (1-12)
      * @return array{created: bool, quota: Quota|null, message: string}
+     *
      * @throws InvalidArgumentException If month is invalid
      */
     public function handle(int $year, int $month): array

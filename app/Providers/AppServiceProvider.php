@@ -3,11 +3,11 @@
 namespace App\Providers;
 
 use Illuminate\Cache\RateLimiting\Limit;
-use Illuminate\Support\Facades\RateLimiter; 
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Schema;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Blade;
-use Illuminate\Http\Request; 
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -26,25 +26,25 @@ class AppServiceProvider extends ServiceProvider
     {
         //
         Schema::defaultStringLength(191);
-            // RateLimiter::for('api', function (Request $request) {
-            //     return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
-            // });
-        RateLimiter::for('api', function (Request $request){
-            return Limit::perMinute(5)->by($request->ip()); 
-        }); 
+        // RateLimiter::for('api', function (Request $request) {
+        //     return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
+        // });
+        RateLimiter::for('api', function (Request $request) {
+            return Limit::perMinute(5)->by($request->ip());
+        });
 
-        RateLimiter::for('auth-users', function (Request $request){
+        RateLimiter::for('auth-users', function (Request $request) {
             return Limit::perMinute(120)->by(
                 optional($request->user())->id ?: $request->ip()
             );
         });
 
-        RateLimiter::for('stats-heavy', function (Request $request){
+        RateLimiter::for('stats-heavy', function (Request $request) {
             return Limit::perMinute(10)->by(
                 optional($request->user())->id ?: $request->ip()
             )->response(function () {
                 return response()->json([
-                    'message' => 'Too many requests. Please try again later.'
+                    'message' => 'Too many requests. Please try again later.',
                 ], 429);
             });
         });

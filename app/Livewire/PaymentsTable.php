@@ -2,10 +2,10 @@
 
 namespace App\Livewire;
 
+use App\Models\Client;
+use App\Models\Payments;
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Models\Payments;
-use App\Models\Client;
 
 class PaymentsTable extends Component
 {

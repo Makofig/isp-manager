@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Models\Payments;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\Request;
 
 class paymentController extends Controller
 {
     use AuthorizesRequests;
+
     /**
      * Display a listing of the resource.
      */
@@ -63,17 +64,17 @@ class paymentController extends Controller
         $payment = Payments::findOrFail($id);
         $this->authorize('update', $payment);
 
-        // Validar los datos 
+        // Validar los datos
         $validated = $request->validate([
             'amount' => 'required|numeric|min:0',
             'coment' => 'required|string|max:255',
             'payment_date' => 'required|date',
             'voucher' => 'nullable|file|mimes:jpg,png,pdf|max:2048',
-        ]); 
+        ]);
 
         // Armamos el array de actualización
         $data = [
-            'abonado'    => $validated['amount'],
+            'abonado' => $validated['amount'],
             'comentario' => $validated['coment'],
             'fecha_pago' => $validated['payment_date'],
         ];

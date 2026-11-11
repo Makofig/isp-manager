@@ -2,18 +2,17 @@
 
 namespace App\Livewire;
 
+use App\Models\Client;
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Models\Client;
-use App\Models\Access_Point;
 
 class AccessClientsTable extends Component
 {
-    use WithPagination; 
-    
+    use WithPagination;
+
     public $access_point_id;
 
-    protected $paginationTheme = 'tailwind'; 
+    protected $paginationTheme = 'tailwind';
 
     // Recibe parámetros del componente
     public function mount($access_point_id)

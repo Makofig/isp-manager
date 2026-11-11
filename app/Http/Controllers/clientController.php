@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Access_Point;
 use App\Models\Client;
 use App\Models\Contracts;
-use App\Models\Access_Point;
-use App\Models\Payments;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Barryvdh\DomPDF\Facade\Pdf;
 
 class clientController extends Controller
 {
     use AuthorizesRequests;
+
     /**
      * Display a listing of the resource.
      */
@@ -25,16 +25,19 @@ class clientController extends Controller
         return view('clients.index');
     }
 
-    public function debtors(){
-        $debtors = Client::whereHas('pagos', function($query) {
+    public function debtors()
+    {
+        $debtors = Client::whereHas('pagos', function ($query) {
             $query->where('estado', '0');
         })->paginate(10);
+
         return view('clients.debtors', compact('debtors'));
     }
 
-    public function banned(){
-        //$bannedClients = Client::where('is_banned', true)->paginate(10);
-        return view('clients.banned'); //compact('bannedClients'));
+    public function banned()
+    {
+        // $bannedClients = Client::where('is_banned', true)->paginate(10);
+        return view('clients.banned'); // compact('bannedClients'));
     }
 
     /**
@@ -46,6 +49,7 @@ class clientController extends Controller
 
         $contracts = Contracts::all();
         $points = Access_Point::all();
+
         return view('clients.create', compact('contracts', 'points'));
     }
 
@@ -75,16 +79,16 @@ class clientController extends Controller
             'file_upload' => 'nullable|image|mimetypes:image/jpeg,image/png,image/webp|max:2048',
         ], [
             // Mensajes personalizados
-            'first_name.required'      => 'The name cannot be empty.',
-            'last_name.required'       => 'The surname cannot be empty.',
-            'phone.required'           => 'A phone number is required.',
-            'contracts_id.required'    => 'You must select a contract.',
-            'contracts_id.exists'      => 'The selected contract is not valid.',
+            'first_name.required' => 'The name cannot be empty.',
+            'last_name.required' => 'The surname cannot be empty.',
+            'phone.required' => 'A phone number is required.',
+            'contracts_id.required' => 'You must select a contract.',
+            'contracts_id.exists' => 'The selected contract is not valid.',
             'access_point_id.required' => 'You must select an access point.',
-            'access_point_id.exists'   => 'The selected access point in not valid.',
-            'street_address.required'  => 'The address is required.',
-            'file_upload.image'        => 'The file must be a valid image.',
-            'file_upload.max'          => 'The image cannot exceed 2 MB.',
+            'access_point_id.exists' => 'The selected access point in not valid.',
+            'street_address.required' => 'The address is required.',
+            'file_upload.image' => 'The file must be a valid image.',
+            'file_upload.max' => 'The image cannot exceed 2 MB.',
         ]);
         // Guardar imagen si viene en la petición
         if ($request->hasFile('file_upload')) {
@@ -101,7 +105,7 @@ class clientController extends Controller
             'direccion' => $validated['street_address'],
             'telefono' => $validated['phone'],
             'ip' => $validated['ip_address'],
-            'imagen' => $validated['imagen'] ?? null
+            'imagen' => $validated['imagen'] ?? null,
         ]);
         // $client->save();
 
@@ -129,6 +133,7 @@ class clientController extends Controller
 
         $contracts = Contracts::all();
         $points = Access_Point::all();
+
         return view('clients.edit', compact('client', 'contracts', 'points'));
     }
 
@@ -144,7 +149,7 @@ class clientController extends Controller
         $validated = $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'ip_address' => 'nullable|ip|unique:cliente,ip,'. $id,
+            'ip_address' => 'nullable|ip|unique:cliente,ip,' . $id,
             'phone' => 'required|string|max:20',
             'contracts_id' => 'required|exists:plan,id',
             'access_point_id' => 'required|exists:accespoint,id',
@@ -152,16 +157,16 @@ class clientController extends Controller
             'file_upload' => 'nullable|image|mimetypes:image/jpeg,image/png,image/webp|max:2048',
         ], [
             // Mensajes personalizados
-            'first_name.required'      => 'The name cannot be empty.',
-            'last_name.required'       => 'The surname cannot be empty.',
-            'phone.required'           => 'A phone number is required.',
-            'contracts_id.required'    => 'You must select a contract.',
-            'contracts_id.exists'      => 'The selected contract is not valid.',
+            'first_name.required' => 'The name cannot be empty.',
+            'last_name.required' => 'The surname cannot be empty.',
+            'phone.required' => 'A phone number is required.',
+            'contracts_id.required' => 'You must select a contract.',
+            'contracts_id.exists' => 'The selected contract is not valid.',
             'access_point_id.required' => 'You must select an access point.',
-            'access_point_id.exists'   => 'The selected access point in not valid.',
-            'street_address.required'  => 'The address is required.',
-            'file_upload.image'        => 'The file must be a valid image.',
-            'file_upload.max'          => 'The image cannot exceed 2 MB.',
+            'access_point_id.exists' => 'The selected access point in not valid.',
+            'street_address.required' => 'The address is required.',
+            'file_upload.image' => 'The file must be a valid image.',
+            'file_upload.max' => 'The image cannot exceed 2 MB.',
         ]);
 
         // Si viene nueva imagen
@@ -188,7 +193,7 @@ class clientController extends Controller
             'direccion' => $validated['street_address'],
             'telefono' => $validated['phone'],
             'ip' => $validated['ip_address'],
-            'imagen' => $validated['imagen'] ?? null
+            'imagen' => $validated['imagen'] ?? null,
         ]);
         // $client->save();
 
@@ -218,25 +223,25 @@ class clientController extends Controller
     public function exportPdf($type)
     {
         // Si NO se envían año/mes → usar actuales
-        $anio = request('anio') ?: now()->year; 
-        $mes = request('mes') ?: now()->month; 
-        // debug 
-        // dd($anio, $mes); 
+        $anio = request('anio') ?: now()->year;
+        $mes = request('mes') ?: now()->month;
+        // debug
+        // dd($anio, $mes);
 
         // $anio = $anio ?: now()->year;
         // $mes  = $mes ?: now()->month;
 
-        $query = Client::query()->with('contract'); 
+        $query = Client::query()->with('contract');
 
         if ($type === 'banned') {
-            $query->where('is_banned', 1); 
+            $query->where('is_banned', 1);
         }
 
         if ($type == 'debtors') {
             $query->whereHas('pagos', function ($q) use ($anio, $mes) {
                 $q->where('estado', '0')
-                  ->whereYear('created_at', $anio)
-                  ->whereMonth('created_at', $mes);
+                    ->whereYear('created_at', $anio)
+                    ->whereMonth('created_at', $mes);
             });
         }
 
@@ -247,7 +252,7 @@ class clientController extends Controller
         $clients = $query->get();
 
         $pdf = Pdf::loadView('exports.clients', compact('clients', 'type', 'anio', 'mes'))
-            ->setPaper('a4', 'portrait'); 
+            ->setPaper('a4', 'portrait');
 
         return $pdf->download("clients_{$type}_" . date('Ymd_His') . '.pdf');
     }

@@ -2,14 +2,14 @@
 
 namespace App\Providers;
 
+use App\Models\Access_Point;
 use App\Models\Client;
 use App\Models\Contracts;
-use App\Models\Access_Point;
 use App\Models\Payments;
 use App\Models\Quota;
+use App\Policies\AccessPointPolicy;
 use App\Policies\ClientPolicy;
 use App\Policies\ContractPolicy;
-use App\Policies\AccessPointPolicy;
 use App\Policies\PaymentPolicy;
 use App\Policies\QuotaPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;

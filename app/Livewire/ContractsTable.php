@@ -2,24 +2,24 @@
 
 namespace App\Livewire;
 
+use App\Models\Contracts;
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Models\Contracts;
 
 class ContractsTable extends Component
 {
-    use WithPagination; 
+    use WithPagination;
 
     protected $paginationTheme = 'tailwind';
 
     public $search = '';
 
-    function updatedSearch($value)
+    public function updatedSearch($value)
     {
         $this->search = strtolower(preg_replace('/\s+/', ' ', trim($value)));
         $this->resetPage();
     }
-    
+
     protected $queryString = [
         'search' => ['except' => ''],
     ];

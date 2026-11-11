@@ -2,16 +2,16 @@
 
 namespace Tests\Feature;
 
+use App\Mail\ClientSuspendedMail;
+use App\Mail\PaymentOverdueMail;
+use App\Mail\QuotaGeneratedMail;
 use App\Models\Client;
 use App\Models\Payments;
 use App\Models\Quota;
 use App\Models\User;
-use App\Notifications\PaymentOverdue;
 use App\Notifications\ClientSuspended;
+use App\Notifications\PaymentOverdue;
 use App\Notifications\QuotaGenerated;
-use App\Mail\QuotaGeneratedMail;
-use App\Mail\PaymentOverdueMail;
-use App\Mail\ClientSuspendedMail;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
@@ -99,7 +99,7 @@ class EmailsTest extends TestCase
     }
 
     /** @test */
-    public function payment_overdue_toMail_returns_mailable(): void
+    public function payment_overdue_to_mail_returns_mailable(): void
     {
         $client = Client::factory()->create();
         $payment = Payments::factory()->create([
@@ -151,7 +151,7 @@ class EmailsTest extends TestCase
     }
 
     /** @test */
-    public function client_suspended_toMail_returns_mailable(): void
+    public function client_suspended_to_mail_returns_mailable(): void
     {
         $client = Client::factory()->create();
         $notification = new ClientSuspended($client->id, 'Falta de pago', now()->toDateTimeString());

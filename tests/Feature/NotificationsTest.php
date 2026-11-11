@@ -2,10 +2,10 @@
 
 namespace Tests\Feature;
 
-use App\Models\User;
-use App\Models\Quota;
-use App\Notifications\QuotaGenerated;
 use App\Mail\QuotaGeneratedMail;
+use App\Models\Quota;
+use App\Models\User;
+use App\Notifications\QuotaGenerated;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
@@ -176,7 +176,7 @@ class NotificationsTest extends TestCase
     }
 
     /** @test */
-    public function quota_generated_toMail_returns_mailable(): void
+    public function quota_generated_to_mail_returns_mailable(): void
     {
         $quota = Quota::create(['numero' => 8]);
         $notification = new QuotaGenerated($quota, 15);
@@ -189,7 +189,7 @@ class NotificationsTest extends TestCase
     }
 
     /** @test */
-    public function quota_generated_toMail_sends_to_user_email(): void
+    public function quota_generated_to_mail_sends_to_user_email(): void
     {
         $quota = Quota::create(['numero' => 8]);
         $notification = new QuotaGenerated($quota, 15);

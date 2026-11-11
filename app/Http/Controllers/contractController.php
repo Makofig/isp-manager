@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Contracts;
-use Illuminate\Http\Request;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Models\Client;
+use App\Models\Contracts;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\Request;
 
 class contractController extends Controller
 {
     use AuthorizesRequests;
+
     /**
      * Display a listing of the resource.
      */
@@ -17,7 +18,7 @@ class contractController extends Controller
     {
         $this->authorize('viewAny', Contracts::class);
 
-        $contracts = Contracts::paginate(10); 
+        $contracts = Contracts::paginate(10);
 
         return view('contracts.index', compact('contracts'));
     }
@@ -39,12 +40,12 @@ class contractController extends Controller
     {
         $this->authorize('create', Contracts::class);
 
-        // Recibimos los datos del contrato para guardarlos 
-        $validated= $request->validate([
+        // Recibimos los datos del contrato para guardarlos
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
             'megabytes' => 'required|integer|min:1',
             'price' => 'required|numeric|min:0',
-        ],[
+        ], [
             'name.required' => 'The name is required.',
             'megabytes.required' => 'Megabytes is mandatory.',
             'price.required' => 'The price is mandatory.',
@@ -87,11 +88,11 @@ class contractController extends Controller
         $this->authorize('update', $contract);
 
         // Recibimos los datos para actualizar el contrato
-        $validated= $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
             'megabytes' => 'required|integer|min:1',
             'price' => 'required|numeric|min:0',
-        ],[
+        ], [
             'name.required' => 'The name is required.',
             'megabytes.required' => 'Megabytes is mandatory.',
             'price.required' => 'The price is mandatory.',
@@ -116,7 +117,7 @@ class contractController extends Controller
 
         // Eliminar un contrato seleccionado
 
-        // Contar los clientes asociados a este contrato 
+        // Contar los clientes asociados a este contrato
         $clientsCount = Client::where('id_plan', $contract->id)->count();
 
         if ($clientsCount > 0) {
@@ -124,7 +125,6 @@ class contractController extends Controller
                 ->route('contracts')
                 ->with('error', "Cannot delete contract {$contract->nombre} because it has associated {$clientsCount} clients.");
         }
-
 
         $contract->delete();
 

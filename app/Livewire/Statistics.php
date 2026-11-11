@@ -2,10 +2,10 @@
 
 namespace App\Livewire;
 
-use Livewire\Component;
 use App\Models\Client;
 use App\Models\Payments;
 use Carbon\Carbon;
+use Livewire\Component;
 
 class Statistics extends Component
 {
@@ -60,15 +60,15 @@ class Statistics extends Component
             })->get();
 
             return [
-                'totalClientes'     => $totalClientes,
-                'bannedClients'     => $bannedClients,
-                'recaudado'         => $payments->recaudado ?? 0,
-                'clientesConPago'   => $payments->clientes_con_pago ?? 0,
-                'totalEsperado'     => $totalEsperado,
-                'rango_1_10'        => $payments->rango_1_10 ?? 0,
-                'rango_11_20'       => $payments->rango_11_20 ?? 0,
-                'rango_21'          => $payments->rango_21 ?? 0,
-                'morosos'           => $morosos,
+                'totalClientes' => $totalClientes,
+                'bannedClients' => $bannedClients,
+                'recaudado' => $payments->recaudado ?? 0,
+                'clientesConPago' => $payments->clientes_con_pago ?? 0,
+                'totalEsperado' => $totalEsperado,
+                'rango_1_10' => $payments->rango_1_10 ?? 0,
+                'rango_11_20' => $payments->rango_11_20 ?? 0,
+                'rango_21' => $payments->rango_21 ?? 0,
+                'morosos' => $morosos,
             ];
         });
 
@@ -80,29 +80,29 @@ class Statistics extends Component
         $deudores = $stats['totalClientes'] - $stats['clientesConPago'];
 
         $rangos = [
-            '1-10'  => $stats['rango_1_10'],
+            '1-10' => $stats['rango_1_10'],
             '11-20' => $stats['rango_11_20'],
-            '>21'   => $stats['rango_21'],
+            '>21' => $stats['rango_21'],
         ];
 
         $this->dispatch('updateCharts', [
             'recaudado' => $stats['recaudado'],
             'pendiente' => $pendiente,
-            'rangos'    => $rangos,
+            'rangos' => $rangos,
         ]);
 
         return view('livewire.statistics', [
-            'totalClientes'   => $stats['totalClientes'],
+            'totalClientes' => $stats['totalClientes'],
             'clientesConPago' => $stats['clientesConPago'],
             'clientesBaneados' => $stats['bannedClients'],
-            'recaudado'       => $stats['recaudado'],
-            'pendiente'       => $pendiente,
-            'morosidad'       => $morosidad,
-            'rangos'          => $rangos,
-            'deudores'        => $deudores,
-            'morosos'         => $stats['morosos'],
-            'mes'             => $this->mes,
-            'anio'            => $this->anio,
+            'recaudado' => $stats['recaudado'],
+            'pendiente' => $pendiente,
+            'morosidad' => $morosidad,
+            'rangos' => $rangos,
+            'deudores' => $deudores,
+            'morosos' => $stats['morosos'],
+            'mes' => $this->mes,
+            'anio' => $this->anio,
         ]);
     }
 }

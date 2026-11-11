@@ -3,7 +3,6 @@
 namespace Database\Factories;
 
 use App\Models\Contracts;
-use App\Models\Access_Point;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class ContractsFactory extends Factory
