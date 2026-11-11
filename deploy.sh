@@ -208,7 +208,37 @@ else
 fi
 
 # ─────────────────────────────────────────────────────────────────────────────
-# STEP 6: OPTIMIZE FOR PRODUCTION
+# STEP 6: REPAIR STORAGE LINK
+# ─────────────────────────────────────────────────────────────────────────────
+step "Storage link"
+if [[ -L "$APP_DIR/public/storage" ]] || [[ -d "$APP_DIR/public/storage" ]]; then
+    # Check if it's a valid symlink pointing to the right target
+    ACTUAL_TARGET=$(readlink -f "$APP_DIR/public/storage" 2>/dev/null || true)
+    EXPECTED_TARGET=$(readlink -f "$APP_DIR/storage/app/public" 2>/dev/null || true)
+    if [[ -n "$ACTUAL_TARGET" && -n "$EXPECTED_TARGET" && "$ACTUAL_TARGET" != "$EXPECTED_TARGET" ]]; then
+        warn "Storage link points to wrong location. Repairing..."
+        rm -rf "$APP_DIR/public/storage"
+    elif [[ -z "$ACTUAL_TARGET" ]]; then
+        warn "Storage link is broken. Repairing..."
+        rm -rf "$APP_DIR/public/storage"
+    else
+        ok "Storage link is valid"
+    fi
+fi
+
+if [[ ! -d "$APP_DIR/public/storage" ]]; then
+    php artisan storage:link 2>/dev/null && ok "Storage link created" || {
+        # Fallback: create directly if artisan fails
+        ln -sfn "$APP_DIR/storage/app/public" "$APP_DIR/public/storage" 2>/dev/null && \
+            ok "Storage link created (fallback)" || \
+            warn "Could not create storage link — check manually"
+    }
+else
+    ok "Storage link already exists and is valid"
+fi
+
+# ─────────────────────────────────────────────────────────────────────────────
+# STEP 7: OPTIMIZE FOR PRODUCTION
 # ─────────────────────────────────────────────────────────────────────────────
 step "Optimize — caches"
 cd "$APP_DIR"
@@ -220,7 +250,7 @@ php artisan view:cache     && ok "Views cached"   || { err "View cache failed"; 
 php artisan event:cache    && ok "Events cached"  || true  # not all apps have events
 
 # ─────────────────────────────────────────────────────────────────────────────
-# STEP 7: PERMISSIONS
+# STEP 8: PERMISSIONS
 # ─────────────────────────────────────────────────────────────────────────────
 step "Permissions"
 chown -R "$WEB_USER":"$WEB_USER" "$APP_DIR/storage" \
@@ -231,7 +261,7 @@ chmod -R 775 "$APP_DIR/storage" \
 ok "Permissions set"
 
 # ─────────────────────────────────────────────────────────────────────────────
-# STEP 8: POST-DEPLOY CHECKS
+# STEP 9: POST-DEPLOY CHECKS
 # ─────────────────────────────────────────────────────────────────────────────
 step "POST-DEPLOY CHECKS"
 
