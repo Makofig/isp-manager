@@ -1,0 +1,121 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Relation ''clients'' is not found in App\\Models\\Payments model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Console/Commands/RemindOverduePayments.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\User\:\:\$unreadNotifications\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/NotificationController.php
+
+		-
+			message: '#^Relation ''contract'' is not found in App\\Models\\Client model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Http/Controllers/clientController.php
+
+		-
+			message: '#^Relation ''pagos'' is not found in App\\Models\\Client model\.$#'
+			identifier: larastan.relationExistence
+			count: 2
+			path: app/Http/Controllers/clientController.php
+
+		-
+			message: '#^Relation ''contract'' is not found in App\\Models\\Client model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Jobs/GenerateQuotaPayments.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>costo" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Jobs/GenerateQuotaPayments.php
+
+		-
+			message: '#^Relation ''pagos'' is not found in App\\Models\\Client model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Livewire/ClientsTable.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Payments\:\:\$month\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Livewire/Dashboard.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Payments\:\:\$totalCuotas\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Livewire/Dashboard.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Payments\:\:\$totalPagado\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Livewire/Dashboard.php
+
+		-
+			message: '#^Parameter \#1 \$callback of method Illuminate\\Database\\Eloquent\\Collection\<int,App\\Models\\Payments\>\:\:mapWithKeys\(\) contains unresolvable type\.$#'
+			identifier: argument.unresolvableType
+			count: 1
+			path: app/Livewire/Dashboard.php
+
+		-
+			message: '#^Relation ''pagos'' is not found in App\\Models\\Client model\.$#'
+			identifier: larastan.relationExistence
+			count: 2
+			path: app/Livewire/Dashboard.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\User\:\:\$unreadNotifications\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Livewire/NotificationsBell.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Payments\:\:\$clients\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Mail/PaymentOverdueMail.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\User\:\:\$appends is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$appends\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\User\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\User\:\:\$hidden is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$hidden\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^Relation ''clients'' is not found in App\\Models\\Payments model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Notifications/PaymentOverdue.php
+
+		-
+			message: '#^Call to static method factory\(\) on an unknown class App\\Models\\Team\.$#'
+			identifier: class.notFound
+			count: 1
+			path: database/factories/UserFactory.php
+
+		-
+			message: '#^Called ''env'' outside of the config directory which returns null when the config is cached, use ''config''\.$#'
+			identifier: larastan.noEnvCallsOutsideOfConfig
+			count: 3
+			path: database/seeders/AdminUserSeeder.php
