@@ -75,6 +75,9 @@ jobs:
           extensions: mbstring, intl, pdo_mysql, zip, gd
           coverage: xdebug
 
+      - name: Install Composer dependencies
+        run: composer install --no-interaction --prefer-dist --optimize-autoloader
+
       - name: Copy .env
         run: |
           cp .env.example .env
@@ -87,9 +90,6 @@ jobs:
           sed -i 's/DB_USERNAME=.*/DB_USERNAME=root/' .env
           sed -i 's/DB_PASSWORD=.*/DB_PASSWORD=root/' .env
           sed -i 's/QUEUE_CONNECTION=.*/QUEUE_CONNECTION=sync/' .env
-
-      - name: Install Composer dependencies
-        run: composer install --no-interaction --prefer-dist --optimize-autoloader
 
       - name: Run migrations
         run: php artisan migrate --force --seed

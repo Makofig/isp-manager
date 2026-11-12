@@ -11,8 +11,8 @@ parameters:
         - tests
     excludePaths:
         - bootstrap/
-        - node_modules/
-        - public/build/
+        - node_modules (?)
+        - public/build (?)
         - storage/
         - vendor/
     checkMissingIterableValueType: false
