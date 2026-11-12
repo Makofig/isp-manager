@@ -15,5 +15,4 @@ parameters:
         - public/build (?)
         - storage/
         - vendor/
-    checkMissingIterableValueType: false
-    checkGenericClassInNonGenericObjectType: false
+

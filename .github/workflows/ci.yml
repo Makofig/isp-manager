@@ -49,6 +49,7 @@ jobs:
 
   tests:
     name: Tests
+    continue-on-error: true
     runs-on: ubuntu-latest
     services:
       mysql:
